@@ -48,16 +48,16 @@ def main():
     # Start in the file where all the info will go
     origin = "/Users/maxdi/source/webscraper-inital/allRevs"
     # For the compete website scrape between 50,000 and 90,000
-    for num in range(10,80):
+    for num in range(82900,83050):
         os.chdir(origin)
-        id = "710" + str(num)
+        id = "_" + str(num)
         goodStr = ""
         similarStr = ""
         improvedStr = ""
         responseStr = ""
         feelStr = ""
         locationStr = ""
-        URL = "https://www.careopinion.org.au/710" + str(num)
+        URL = "https://www.careopinion.org.au/" + str(num)
         # URL = input("Enter Value:" )
         page = requests.get(URL)
         # Simulating starting from 81,000 so need to add "810"
@@ -71,8 +71,25 @@ def main():
             false_urls +=1
             continue
 
-        os.mkdir(id)
-        os.chdir(id)
+        if "story was withdrawn" in erStr:
+            false_urls +=1
+            continue
+
+        respID = fullHTML.find_all("ul" , class_="response-supplemental clearfix")
+        insideLoop = False
+        #If the id is actually a response id then do not re-download
+        for ip in respID:
+            print(ip.attrs["data-po-response-id"])
+            if str(ip.attrs["data-po-response-id"]) == str(num):
+                false_urls +=1
+                insideLoop = True
+                continue
+        if insideLoop:
+            insideLoop = False
+            continue
+
+        os.mkdir(str(num))
+        os.chdir(str(num))
         # using class tag -> potentially usefull for tags, but not getting if it is "what was good?", "what was bad?", ect.
         # allTags = fullHTML.find_all("a", class_="inline-block font-c-1 tooltip")
         # for i in allTags:
@@ -82,14 +99,14 @@ def main():
 
         # Getting the actual review
         review = fullHTML.find(id="opinion_body")
-        f = open("review"+id, "ab")
+        f = open("Story" + id, "ab")
         f.write(review.text.encode())
         f.close
 
         # Getting time of review
         timediv = fullHTML.find("time")
         timeSub = timediv.attrs["datetime"]
-        time = open("time"+id, "ab")
+        time = open("Date"+id, "ab")
         time.write(str(timeSub).encode())
         time.close()
 
@@ -115,9 +132,9 @@ def main():
                     # feel.append(tag.text)
                     feelStr += tag.text
 
-        g = open("whatGood"+id, "ab")
-        b = open("whatBad"+id, "ab")
-        feel = open("howFeel"+id, "ab")
+        g = open("Good_Tag"+id, "ab")
+        b = open("Improved_Tag"+id, "ab")
+        feel = open("Feel_Tag"+id, "ab")
 
         g.write(goodStr.encode())
         b.write(improvedStr.encode())
@@ -138,17 +155,18 @@ def main():
         similar.close()
 
         # Getting responses
-        responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
-        for i in responseHTML:
-            # print(i.text)
-            # response = i.text
-            responseStr += i.text
+        # responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
+        # for i in responseHTML:
+        #     # print(i.text)
+        #     # response = i.text
+        #     responseStr += i.text
 
-        resp = open("response"+id,"ab")
-        resp.write(responseStr.encode())
-        resp.close()
+        # resp = open("response"+id,"ab")
+        # resp.write(responseStr.encode())
+        # resp.close()
 
         # Getting location
+        
         location = fullHTML.find_all("span", itemtype="http://schema.org/Organization")
         for loc in location:
             locationStr += loc.text
@@ -156,6 +174,18 @@ def main():
         locations.write(locationStr.encode())
         locations.close()
         #Add all this to the sql
+
+        os.mkdir("Responses")
+        os.chdir("Responses")
+        for id in respID:
+            resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
+            responseHTML = resp.find_all("blockquote", class_="froala-view")
+            for i in responseHTML:
+                    resp = open("response"+id.attrs["data-po-response-id"],"ab")
+                    resp.write(i.text.encode())
+                    resp.close()
+                    responseStr += i.text
+
         rev = (id,review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
