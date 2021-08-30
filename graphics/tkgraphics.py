@@ -97,7 +97,9 @@ def main():
     part_label = tk.Label
     win.title("DB search")
     win.geometry('700x700')
-    win['background'] = '#856ff8'
+    background_image = tk.PhotoImage(file='background.png')
+    background_label =  tk.Label(win,image=background_image)
+    background_label.place(relwidth=1, relheight=1)
     # title_label = tk.Label(win,text = "Welcome! Use this to search for reviews in the databse:", font=('bold',10),pady=20,padx=100)
     # title_label.grid()
 
@@ -140,7 +142,7 @@ def main():
     scrollbar2.grid(row=15, column=1,sticky='ew')
     # Set scroll to listbox
     # search_results.configure(yscrollcommand=scrollbar.set)
-    search_results.config(xscrollcommand=scrollbar2.set)
+    search_results.configure(xscrollcommand=scrollbar2.set)
 
 
     #buttons
