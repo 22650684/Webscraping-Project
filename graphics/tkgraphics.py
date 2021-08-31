@@ -128,7 +128,7 @@ def main():
     input_output = tk.OptionMenu(win,output_text,*DataTypes)
     input_output.place(x=355,y=135)
 
-    # Listbox that will show reviewed
+    # Listbox that will show reviewed 
     search_results = Listbox(win, height=12, width=50, border=0)
     search_results.grid(row=10, column=0, columnspan=3, rowspan=6, pady=20, padx=20)
     search_results.place(x=98, y=275)
