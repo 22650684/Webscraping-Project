@@ -47,7 +47,7 @@ def main():
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
-    origin = "/Users/shaunsamuel/Desktop/UWA - 2021/Semester 2/CITS3200/Group Project/wp_files"
+    origin = "/Users/maxdi/source/webscraper-inital/allRevs"
     # For the complete website scrape between 50,000 and 90,000
     for num in range(82901,83050):
         os.chdir(origin)
@@ -80,7 +80,7 @@ def main():
         insideLoop = False
         #If the id is actually a response id then do not re-download
         for ip in respID:
-            print(ip.attrs["data-po-response-id"])
+            #print(ip.attrs["data-po-response-id"])
             if str(ip.attrs["data-po-response-id"]) == str(num):
                 false_urls +=1
                 insideLoop = True
@@ -158,7 +158,6 @@ def main():
         # Getting username
         userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
         userDiv = userNameAll.find("div")
-        print(userDiv.text)
         username = open("Username"+id,"ab")
         username.write(userDiv.text.encode())
         username.close()
@@ -199,7 +198,7 @@ def main():
         os.chdir("..")
         os.mkdir("Updates")
         os.chdir("Updates")
-        rev = (id,review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
+        rev = (str(num),review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
     print(false_urls)
