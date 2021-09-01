@@ -165,7 +165,7 @@ def main():
         #Get number of reads
         currentList =  fullHTML.find("li", id="subscribers_read_count")
         currentReadNum = currentList.strong
-        readNum = open("Read_number"+id,"ab")
+        readNum = open("Activity"+id,"ab")
         for i in currentReadNum:
             print(i)
             try:
