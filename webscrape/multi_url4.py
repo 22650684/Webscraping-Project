@@ -7,7 +7,7 @@ import pandas as pd
 
 def create_db(conn):
     try:
-        conn.execute('''CREATE TABLE Review
+        conn.execute('''CREATE TABLE IF NOT EXISTS Review
             (id integer PRIMARY KEY,
             story TEXT ,
             timePosted STR,
@@ -43,7 +43,7 @@ def select_all_tags(conn,tagName,similarTag):
         print(i)
 
 def main():
-    conn = sqlite3.connect('test2.db')
+    conn = sqlite3.connect('test3.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
@@ -154,6 +154,14 @@ def main():
         similar = open("Similar"+id,"ab")
         similar.write(similarStr.encode())
         similar.close()
+        
+        # Getting username
+        userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
+        userDiv = userNameAll.find("div")
+        print(userDiv.text)
+        username = open("Username"+id,"ab")
+        username.write(userDiv.text.encode())
+        username.close()
 
         # Getting responses
         # responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
@@ -174,8 +182,8 @@ def main():
         locations = open("About"+id, "ab")
         locations.write(locationStr.encode())
         locations.close()
-        #Add all this to the sql
-
+        
+        #Make the response folder and add response names
         os.mkdir("Responses")
         os.chdir("Responses")
         for id in respID:
@@ -186,7 +194,11 @@ def main():
                     resp.write(i.text.encode())
                     resp.close()
                     responseStr += i.text
-
+                    
+        #Make updates folder; TODO where are update 
+        os.chdir("..")
+        os.mkdir("Updates")
+        os.chdir("Updates")
         rev = (id,review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
