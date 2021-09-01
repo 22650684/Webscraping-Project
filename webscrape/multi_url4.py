@@ -161,6 +161,18 @@ def main():
         username = open("Username"+id,"ab")
         username.write(userDiv.text.encode())
         username.close()
+        
+        #Get number of reads
+        currentList =  fullHTML.find("li", id="subscribers_read_count")
+        currentReadNum = currentList.strong
+        readNum = open("Read_number"+id,"ab")
+        for i in currentReadNum:
+            print(i)
+            try:
+                readNum.write(i.encode())
+            except:
+                n34=0
+        readNum.close()
 
         # Getting responses
         # responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
