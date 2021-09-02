@@ -162,6 +162,7 @@ def main():
         username.write(userDiv.text.encode())
         username.close()
         
+  
         #Get number of reads
         currentList =  fullHTML.find("li", id="subscribers_read_count")
         currentReadNum = currentList.strong
