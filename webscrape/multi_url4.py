@@ -214,13 +214,16 @@ def main():
         os.mkdir("Responses")
         os.chdir("Responses")
         for id in respID:
-            resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
-            responseHTML = resp.find_all("blockquote", class_="froala-view")
-            for i in responseHTML:
-                    resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
-                    resp.write(i.text.encode())
-                    resp.close()
-                    responseStr += i.text
+        resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
+        responseHTML = resp.find_all("blockquote", class_="froala-view")
+        dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
+        for i in responseHTML:
+                resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
+                respTime = open("Response_Time"+id.attrs["data-po-response-id"],"ab")
+                respTime.write(dateSumbmitted.text.encode())
+                resp.write(i.text.encode())
+                resp.close()
+                responseStr += i.text
                     
         #Make updates folder; TODO where are update 
         os.chdir("..")
