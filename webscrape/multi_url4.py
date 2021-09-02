@@ -85,7 +85,6 @@ def main():
         goodStr = ""
         similarStr = ""
         improvedStr = ""
-        responseStr = ""
         feelStr = ""
         locationStr = ""
         URL = "https://www.careopinion.org.au/" + str(num)
@@ -244,16 +243,19 @@ def main():
         os.mkdir("Responses")
         os.chdir("Responses")
         for id in respID:
-        resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
-        responseHTML = resp.find_all("blockquote", class_="froala-view")
-        dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
-        for i in responseHTML:
+            responseStr = ""
+            resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
+            responseHTML = resp.find_all("blockquote", class_="froala-view")
+            dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
+            for i in responseHTML:
                 resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
                 respTime = open("Response_Time"+id.attrs["data-po-response-id"],"ab")
                 respTime.write(dateSumbmitted.text.encode())
                 resp.write(i.text.encode())
                 resp.close()
                 responseStr += i.text
+            res = (id,responseStr,resInfo,respTime,str(num))
+            create_response(conn, res)
                     
         #Make updates folder; TODO where are update 
         os.chdir("..")
