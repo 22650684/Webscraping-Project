@@ -4,7 +4,7 @@ import os
 
 origin = os.getcwd()
 num = 68
-os.chdir("/Users/maxdi/source/webscraper-inital/allRevs")
+os.chdir("/Users/jakha/Documents/Professional Computing/webscrape_files")
 # os.chdir(origin)
 os.mkdir(str(num))
 os.chdir(str(num))
@@ -15,6 +15,8 @@ improvedStr = ""
 responseStr = ""
 feelStr = ""
 locationStr = ""
+responseStageStr = ""
+responseHeaderStr = ""
 URL = "https://www.careopinion.org.au/827" + str(num)
 # URL = input("Enter Value:" )
 page = requests.get(URL)
@@ -34,6 +36,12 @@ if "We couldn't find the story" in erStr:
 #     print(i.text)
 
 # tag parent divs
+
+# Getting review header
+reviewHeader = fullHTML.find(id="opinion_title")
+revHeader = open("reviewHeader"+id, "w+")
+revHeader.write(reviewHeader.text)
+revHeader.close
 
 # Getting the actual review
 review = fullHTML.find(id="opinion_body")
@@ -58,7 +66,6 @@ for i in parentDivs:
         for tag in tags:
             # good.append(tag.text)
             goodStr += tag.text
-
     
     if "What could be improved?" in checker:
         for tag in tags:
@@ -111,6 +118,23 @@ for loc in location:
 locations = open("location"+id, "w+")
 locations.write(locationStr)
 locations.close()
+
+# Getting Response Stage
+responseStage = fullHTML.find("p", class_="margin-top-1 margin-bottom-0")
+for i in parentDivs:
+    checker = str(i.h2)
+    if "STORY HAS A RESPONSE" in checker:
+        responseStageStr = responseStage.text 
+resStage = open("responseStage"+id, "w+")
+resStage.write(responseStageStr)
+resStage.close()
+
+# Getting Response Header
+responseHeader = fullHTML.find("div", class_= "inner js-inner-expansion inner-expansion js-hidden")
+responseHeaderStr = responseHeader.text
+resHeader = open("responseHeader"+id, "w+")
+resHeader.write(responseHeaderStr)
+resHeader.close()
 
 # for i in good:
 #     goodStr += i
