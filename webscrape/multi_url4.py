@@ -8,26 +8,56 @@ import pandas as pd
 def create_db(conn):
     try:
         conn.execute('''CREATE TABLE IF NOT EXISTS Review
-            (id integer PRIMARY KEY,
-            story TEXT ,
-            timePosted STR,
+            (StoryID INT NOT NULL PRIMARY KEY,
+            Story TEXT ,
+            Username TEXT ,
+            Title TEXT,
+            About TEXT,
+            StoryTime STR,
+            Activity TEXT,
+            Progress TEXT,
             goodTag TEXT,
             similarTag TEXT,
             improvedTag TEXT,
-            responseTag TEXT,
-            feelTag TEXT,
-            locationTag TEXT )''')
+            feelTag TEXT)''')
+
+        conn.execute('''CREATE TABLE IF NOT EXISTS Response
+            (ResponseID INT NOT NULL PRIMARY KEY,
+            Response TEXT ,
+            ResponseInfo TEXT,
+            ResponseTime STR,
+            storyID INT NOT NULL,
+            FOREIGN KEY (storyID) REFERENCES Story (StoryID) )''')
+
+        conn.execute('''CREATE TABLE IF NOT EXISTS Updates
+            (UpdateID INT NOT NULL PRIMARY KEY,
+            Update TEXT ,
+            updateUsername Text,
+            storyID INT NOT NULL,
+            FOREIGN KEY (storyID) REFERENCES Story (StoryID) )''')
         conn.commit()
         print("Table created successfully")
     except:
         pass
 
 def create_review(conn, review):
-    sql = ''' INSERT INTO Review(id,story,timePosted,goodTag,similarTag,improvedTag,responseTag,feelTag,locationTag) VALUES(?,?,?,?,?,?,?,?,?)'''
+    sql = ''' INSERT INTO Review(StoryID,Story,Username,Title,About,StoryTime,Activity,Progress,goodTag,similarTag,improvedTag,feelTag) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, review)
     conn.commit()
 
+def create_response(conn, allResponse):
+    sql = ''' INSERT INTO Response(ResponseID,Response,ResponseInfo,ResponseTime,storyID) VALUES(?,?,?,?,?)'''
+    cur = conn.cursor()
+    cur.execute(sql, allResponse)
+    conn.commit()
+
+def create_update(conn, allUpdate):
+    sql = ''' INSERT INTO Updates(UpdateID,Update,updateUsername,storyID) VALUES(?,?,?,?)'''
+    cur = conn.cursor()
+    cur.execute(sql, allResponse)
+    conn.commit()
+    
 def select_all_tasks(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM Review")
@@ -229,7 +259,10 @@ def main():
         os.chdir("..")
         os.mkdir("Updates")
         os.chdir("Updates")
-        rev = (str(num),review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
+        #update = (updateID,updateText,updateUsername,str(num))
+        #create_update(conn,update)
+
+        rev = (str(num),review.text.encode,userDiv.text.encode,title,locationStr,timeSub,currentReadNum,progess,goodStr,similarStr,improvedStr,feelStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
     print(false_urls)
