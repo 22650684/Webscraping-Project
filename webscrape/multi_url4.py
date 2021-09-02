@@ -200,6 +200,15 @@ def main():
         for i in titleTag:
             title.write(i.encode())
         title.close()
+        
+        #Get the progress
+        whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
+        progressOfRev = whereReviewUpToTag.find("h2")
+        progress = open("Progress"+id,"ab")
+        for i in progressOfRev:
+            print(i)
+            progress.write(i.encode())
+        progress.close()
 
         #Make the response folder and add response names
         os.mkdir("Responses")
