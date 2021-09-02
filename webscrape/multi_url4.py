@@ -1,12 +1,13 @@
-import requests 
+###
+import requests  
 from bs4 import BeautifulSoup
 import os
-import sqlite3
+import sqlite3 
 import pandas as pd
 
 def create_db(conn):
     try:
-        conn.execute('''CREATE TABLE Review
+        conn.execute('''CREATE TABLE IF NOT EXISTS Review
             (id integer PRIMARY KEY,
             story TEXT ,
             timePosted STR,
@@ -42,13 +43,13 @@ def select_all_tags(conn,tagName,similarTag):
         print(i)
 
 def main():
-    conn = sqlite3.connect('test2.db')
+    conn = sqlite3.connect('test3.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
     origin = "/Users/maxdi/source/webscraper-inital/allRevs"
-    # For the compete website scrape between 50,000 and 90,000
-    for num in range(82900,83050):
+    # For the complete website scrape between 50,000 and 90,000
+    for num in range(82901,83050):
         os.chdir(origin)
         id = "_" + str(num)
         goodStr = ""
@@ -79,7 +80,7 @@ def main():
         insideLoop = False
         #If the id is actually a response id then do not re-download
         for ip in respID:
-            print(ip.attrs["data-po-response-id"])
+            #print(ip.attrs["data-po-response-id"])
             if str(ip.attrs["data-po-response-id"]) == str(num):
                 false_urls +=1
                 insideLoop = True
@@ -150,9 +151,29 @@ def main():
             for tag in tags:
                 # similar.append(tag.text)
                 similarStr += tag.text
-        similar = open("similar"+id,"ab")
+        similar = open("Similar"+id,"ab")
         similar.write(similarStr.encode())
         similar.close()
+        
+        # Getting username
+        userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
+        userDiv = userNameAll.find("div")
+        username = open("Username"+id,"ab")
+        username.write(userDiv.text.encode())
+        username.close()
+        
+  
+        #Get number of reads
+        currentList =  fullHTML.find("li", id="subscribers_read_count")
+        currentReadNum = currentList.strong
+        readNum = open("Activity"+id,"ab")
+        for i in currentReadNum:
+            print(i)
+            try:
+                readNum.write(i.encode())
+            except:
+                n34=0
+        readNum.close()
 
         # Getting responses
         # responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
@@ -166,27 +187,46 @@ def main():
         # resp.close()
 
         # Getting location
-        
         location = fullHTML.find_all("span", itemtype="http://schema.org/Organization")
         for loc in location:
             locationStr += loc.text
-        locations = open("location"+id, "ab")
+        locations = open("About"+id, "ab")
         locations.write(locationStr.encode())
         locations.close()
-        #Add all this to the sql
+        
+        # Get the title 
+        titleTag = fullHTML.find("title")
+        title = open("Title"+id,"ab")
+        for i in titleTag:
+            title.write(i.encode())
+        title.close()
+        
+        #Get the progress
+        whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
+        progressOfRev = whereReviewUpToTag.find("h2")
+        progress = open("Progress"+id,"ab")
+        for i in progressOfRev:
+            print(i)
+            progress.write(i.encode())
+        progress.close()
 
+        #Make the response folder and add response names
         os.mkdir("Responses")
         os.chdir("Responses")
         for id in respID:
             resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
             responseHTML = resp.find_all("blockquote", class_="froala-view")
             for i in responseHTML:
-                    resp = open("response"+id.attrs["data-po-response-id"],"ab")
+                    resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
                     resp.write(i.text.encode())
                     resp.close()
                     responseStr += i.text
-
-        rev = (id,review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
+                    
+        #Make updates folder; TODO where are update 
+        os.chdir("..")
+        os.mkdir("Updates")
+        os.chdir("Updates")
+        rev = (str(num),review.text.encode,timeSub,goodStr,similarStr,improvedStr,responseStr,feelStr,locationStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
     print(false_urls)
