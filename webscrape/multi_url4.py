@@ -187,7 +187,6 @@ def main():
         # resp.close()
 
         # Getting location
-        
         location = fullHTML.find_all("span", itemtype="http://schema.org/Organization")
         for loc in location:
             locationStr += loc.text
@@ -195,6 +194,13 @@ def main():
         locations.write(locationStr.encode())
         locations.close()
         
+        # Get the title 
+        titleTag = fullHTML.find("title")
+        title = open("Title"+id,"ab")
+        for i in titleTag:
+            title.write(i.encode())
+        title.close()
+
         #Make the response folder and add response names
         os.mkdir("Responses")
         os.chdir("Responses")
