@@ -121,10 +121,7 @@ locations.close()
 
 # Getting Response Stage
 responseStage = fullHTML.find("p", class_="margin-top-1 margin-bottom-0")
-for i in parentDivs:
-    checker = str(i.h2)
-    if "STORY HAS A RESPONSE" in checker:
-        responseStageStr = responseStage.text 
+responseStageStr = responseStage.text 
 resStage = open("responseStage"+id, "w+")
 resStage.write(responseStageStr)
 resStage.close()
