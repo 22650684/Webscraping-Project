@@ -72,6 +72,20 @@ def select_all_tags(conn,tagName,similarTag):
     for i in allId:
         print(i)
 
+def select_story_res(conn, storyId):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Response WHERE storyID = {}".format(storyId))
+    resDetails = cur.fetchall()
+    for eachRes in resDetails:
+        print(eachRes)
+
+def select_story_update(conn, storyId):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Updates WHERE storyID = {}".format(storyId))
+    updateDetails = cur.fetchall()
+    for update in updateDetails:
+        print(update)    
+
 def main():
     conn = sqlite3.connect('test5.db')
     create_db(conn)
