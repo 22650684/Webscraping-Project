@@ -25,7 +25,7 @@ def create_db(conn):
             (ResponseID INT NOT NULL PRIMARY KEY,
             Response TEXT ,
             ResponseInfo TEXT,
-            ResponseTime STR,
+            ResponseTime TEXT,
             storyID INT NOT NULL,
             FOREIGN KEY (storyID) REFERENCES Story (StoryID) )''')
 
@@ -55,7 +55,7 @@ def create_response(conn, allResponse):
 def create_update(conn, allUpdate):
     sql = ''' INSERT INTO Updates(UpdateID,Update,updateUsername,storyID) VALUES(?,?,?,?)'''
     cur = conn.cursor()
-    cur.execute(sql, allResponse)
+    cur.execute(sql, allUpdate)
     conn.commit()
     
 def select_all_tasks(conn):
@@ -73,13 +73,13 @@ def select_all_tags(conn,tagName,similarTag):
         print(i)
 
 def main():
-    conn = sqlite3.connect('test3.db')
+    conn = sqlite3.connect('test5.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
-    origin = "/Users/jakha/Documents/Professional Computing/webscrape_files"
+    origin = "/Users/maxdi/source/webscraper-inital/allRevs"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(83100,83103):
+    for num in range(83100,83130):
         os.chdir(origin)
         id = "_" + str(num)
         goodStr = ""
@@ -194,15 +194,20 @@ def main():
   
         #Get number of reads
         currentList =  fullHTML.find("li", id="subscribers_read_count")
-        currentReadNum = currentList.strong
-        readNum = open("Activity"+id,"ab")
+        try:
+            currentReadNum = currentList.strong
+        except AttributeError:
+            nc=1
+        readNum = ""
+        currentreadNum = open("Activity"+id,"ab")
         for i in currentReadNum:
             print(i)
             try:
-                readNum.write(i.encode())
+                currentreadNum.write(i.encode())
+                readNum += i
             except:
                 n34=0
-        readNum.close()
+        currentreadNum.close()
 
         # Getting responses
         # responseHTML = fullHTML.find_all("blockquote", class_="froala-view")
@@ -223,13 +228,15 @@ def main():
         locations.write(locationStr.encode())
         locations.close()
         
+        titleTxt = ""
         # Get the title 
         titleTag = fullHTML.find("title")
         title = open("Title"+id,"ab")
         for i in titleTag:
+            titleTxt += i
             title.write(i.encode())
         title.close()
-        
+        prog = ""
         #Get the progress
         whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
         progressOfRev = whereReviewUpToTag.find("h2")
@@ -237,27 +244,30 @@ def main():
         for i in progressOfRev:
             print(i)
             progress.write(i.encode())
+            prog += i
         progress.close()
-
-        #Response Header
-        responseHeader = fullHTML.find("div", class_= "inner-expansion-profile")
-        responseHeaderStr = responseHeader.text
-        resHeader = open("responseHeader"+id, "ab")
-        resHeader.write(responseHeaderStr.encode())
-        resHeader.close()
-
-        #Response Date
-        responseDate = fullHTML.findAll("span", class_="response-submission-footer-content")
-        resDate = open("responseDate"+id, "ab")
-        responseDateStr = ""
-        for date in responseDate:
-            responseDateStr += date.text
-        resDate.write(responseDateStr.encode())
-        resDate.close()
 
         #Make the response folder and add response names
         os.mkdir("Responses")
         os.chdir("Responses")
+        #Response Header
+        responseHeader = fullHTML.find("div", class_= "inner-expansion-profile")
+        try:
+            responseHeaderStr = responseHeader.text
+        except:
+            nc=1
+        resHeader = open("Response_Header"+id, "ab")
+        resHeader.write(responseHeaderStr.encode())
+        resHeader.close()
+
+        #Response Date
+        # responseDate = fullHTML.findAll("span", class_="response-submission-footer-content")
+        # resDate = open("responseDate"+id, "ab")
+        # responseDateStr = ""
+        # for date in responseDate:
+        #     responseDateStr += date.text
+        # resDate.write(responseDateStr.encode())
+        # resDate.close()
         for id in respID:
             responseStr = ""
             resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
@@ -270,7 +280,7 @@ def main():
                 resp.write(i.text.encode())
                 resp.close()
                 responseStr += i.text
-            res = (id,responseStr,resInfo,respTime,str(num))
+            res = (int(id.attrs["data-po-response-id"]),responseStr,responseHeaderStr,dateSumbmitted.text,str(num))
             create_response(conn, res)
                     
         #Make updates folder; TODO where are update 
@@ -280,7 +290,7 @@ def main():
         #update = (updateID,updateText,updateUsername,str(num))
         #create_update(conn,update)
 
-        rev = (str(num),review.text.encode,userDiv.text.encode,title,locationStr,timeSub,currentReadNum,progess,goodStr,similarStr,improvedStr,feelStr)
+        rev = (str(num),review.text,userDiv.text,titleTxt,locationStr,timeSub,readNum,prog,goodStr,similarStr,improvedStr,feelStr)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
     print(false_urls)
