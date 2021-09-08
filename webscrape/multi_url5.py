@@ -251,14 +251,6 @@ def main():
         os.mkdir("Responses")
         os.chdir("Responses")
         #Response Header
-        responseHeader = fullHTML.find("div", class_= "inner-expansion-profile")
-        try:
-            responseHeaderStr = responseHeader.text
-        except:
-            nc=1
-        resHeader = open("Response_Header"+id, "ab")
-        resHeader.write(responseHeaderStr.encode())
-        resHeader.close()
 
         #Response Date
         # responseDate = fullHTML.findAll("span", class_="response-submission-footer-content")
@@ -273,6 +265,15 @@ def main():
             resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
             responseHTML = resp.find_all("blockquote", class_="froala-view")
             dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
+            
+            responseHeader = resp.find("div", class_= "inner-expansion-profile")
+            try:
+                responseHeaderStr = responseHeader.text
+            except:
+                nc=1
+            resHeader = open("Response_Header_"+id.attrs["data-po-response-id"], "ab")
+            resHeader.write(responseHeaderStr.encode())
+            resHeader.close()
             for i in responseHTML:
                 resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
                 respTime = open("Response_Time"+id.attrs["data-po-response-id"],"ab")
