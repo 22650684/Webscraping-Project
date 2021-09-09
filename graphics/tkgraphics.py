@@ -97,9 +97,10 @@ def main():
     part_label = tk.Label
     win.title("DB search")
     win.geometry('700x700')
-    background_image = tk.PhotoImage(file='background.png')
-    background_label =  tk.Label(win,image=background_image)
-    background_label.place(relwidth=1, relheight=1)
+    win.resizable(False,False)
+    win.backGroundImage = PhotoImage(file="background.png")
+    win.backGroundImageLabel=Label(win, image=win.backGroundImage)
+    win.backGroundImageLabel.place(x=0,y=0)
     # title_label = tk.Label(win,text = "Welcome! Use this to search for reviews in the databse:", font=('bold',10),pady=20,padx=100)
     # title_label.grid()
 
@@ -107,30 +108,30 @@ def main():
     tag_text = tk.StringVar()
     tag_text.set(DataTypes[3])
     tag_label = tk.Label(win,text = "Enter Search Tag:", font=('bold',12))
-    tag_label.grid(row=1, column=0, sticky=tk.W)
+    tag_label.place(x=160, y=60)
     input_tag = tk.OptionMenu(win,tag_text,*DataTypes)
-    input_tag.grid(row=1,column=1)
+    input_tag.place(x=385,y=50)
 
     #specific search e.g nurse, food, doctors
    
     spec_text = tk.StringVar()
     spec_label = tk.Label(win,text = "Enter Specific Tag:", font=('bold',12))
-    spec_label.grid(row=2, column=0, sticky=tk.W)
+    spec_label.place(x=160,y=100)
     input_spec = tk.Entry(win,textvariable=spec_text)
-    input_spec.grid(row=2,column=1)
+    input_spec.place(x=380,y=100)
 
     #which output they would like id,rev
     output_text = tk.StringVar()
     output_text.set(DataTypes[0])
     output_label = tk.Label(win,text = "Enter Output type:", font=('bold',12))
-    output_label.grid(row=3, column=0, sticky=tk.W)
+    output_label.place(x=160, y=140)
     input_output = tk.OptionMenu(win,output_text,*DataTypes)
-    input_output.grid(row=3,column=1)
+    input_output.place(x=385,y=135)
 
     # Listbox that will show reviewed
-    search_results = Listbox(win, height=8, width=60, border=0)
+    search_results = Listbox(win, height=8, width=50, border=0)
     search_results.grid(row=10, column=0, columnspan=3, rowspan=6, pady=20, padx=20)
-    search_results.place(relx=0.5,rely=0.5,anchor="center")
+    search_results.place(x=98, y=275)
     # Create scrollbar
     scrollbar = Scrollbar(win,orient='vertical',command=search_results.yview)
     scrollbar.grid(row=8, column=3,sticky='ns')
@@ -147,12 +148,10 @@ def main():
 
     #buttons
     search_but = tk.Button(win,text='Search', width=12,command=search)
-    search_but.grid(row=5,column=2)
-    search_but.place(relx=0.4,rely=0.3,anchor="center")
+    search_but.place(x=220,y=200)
     #clear
     clear_but = tk.Button(win,text='Clear', width=12,command=clear_search_res)
-    clear_but.grid(row=5,column=3)
-    clear_but.place(relx=0.6,rely=0.3,anchor="center")
+    clear_but.place(x=370,y=200)
     # canvas1.create_window(200, 140, window=entry1)
     win.mainloop()
     #In cmd run pyinstaller graphics1.py to get an application
