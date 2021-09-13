@@ -302,6 +302,15 @@ def main():
         os.chdir("..")
         os.mkdir("Updates")
         os.chdir("Updates")
+        try:
+            updateDiv = fullHTML.find("div", class_="author_response comment public")
+            updID = updateDiv.attrs["id"]
+            blockText = updateDiv.find("blockquote")
+            updateDiv = open("Update_"+updID, "ab")
+            updateDiv.write(blockText.text.encode())
+            updateDiv.close()
+        except:
+            nc=3
         #update = (updateID,updateText,updateUsername,str(num))
         #create_update(conn,update)
 
