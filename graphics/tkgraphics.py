@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import ttk
+from ttkthemes.themed_tk import ThemedTk
+from ttkthemes.themed_style import ThemedStyle
 import sqlite3
 
 conn = sqlite3.connect('test3.db')
@@ -35,6 +38,16 @@ def select_specific_info(conn,tagName,similarTag,outputType):
         similarTerm += "LIKE '%"
         similarTerm += similarTag
         similarTerm += "%'"
+    elif "user" in tagName:
+        searchTerm += "Username"
+        similarTerm += "LIKE '%"
+        similarTerm += similarTag
+        similarTerm += "%'"
+    elif "time" in tagName:
+        searchTerm += "StoryTime"
+        similarTerm += "LIKE '%"
+        similarTerm += similarTag
+        similarTerm += "%'"
     elif "id" in tagName:
         searchTerm += "id="
         similarTerm += similarTag
@@ -54,6 +67,14 @@ def select_specific_info(conn,tagName,similarTag,outputType):
         outputTag = "locationTag"
     elif "feel" in outputType:
         outputTag = "feelTag"
+    elif "activit" in outputType:
+        outputTag = "Activity"
+    elif "prog" in outputType:
+        outputTag = "Progress"
+    elif "titl" in outputType:
+        outputTag = "Title"
+    elif "abou" in outputType:
+        outputTag = "About"
 
     #TODO does not recognise id because it is a number not string
     cur = conn.cursor()
@@ -91,8 +112,19 @@ def main():
         "response Tag",
         "feel Tag",
         "location Tag"
+        "about",
+        "time",
+        "title"
     ]
-
+    
+    setStyle = "arc"
+    setColour = "#00cece"
+    
+    style = ttk.Style()
+    style.configure("TLabel", background= setColour)
+    style.configure("TButton", background= setColour)
+    style.configure("OptionMenu", background= setColour)
+    
     #Part title
     part_label = tk.Label
     win.title("DB search")
@@ -107,50 +139,52 @@ def main():
     #tag label e.g improve,bad,location ect
     tag_text = tk.StringVar()
     tag_text.set(DataTypes[3])
-    tag_label = tk.Label(win,text = "Enter Search Tag:", font=('bold',12))
+    tag_label = ttk.Label(win,text = "Enter Search Tag:", font=('bold',12))
     tag_label.place(x=160, y=60)
-    input_tag = tk.OptionMenu(win,tag_text,*DataTypes)
+    input_tag = ttk.OptionMenu(win,tag_text,*DataTypes)
     input_tag.place(x=385,y=50)
 
     #specific search e.g nurse, food, doctors
    
     spec_text = tk.StringVar()
-    spec_label = tk.Label(win,text = "Enter Specific Tag:", font=('bold',12))
+    spec_label = ttk.Label(win,text = "Enter Specific Tag:", font=('bold',12))
     spec_label.place(x=160,y=100)
-    input_spec = tk.Entry(win,textvariable=spec_text)
+    input_spec = ttk.Entry(win,textvariable=spec_text)
     input_spec.place(x=380,y=100)
 
     #which output they would like id,rev
     output_text = tk.StringVar()
     output_text.set(DataTypes[0])
-    output_label = tk.Label(win,text = "Enter Output type:", font=('bold',12))
+    output_label = ttk.Label(win,text = "Enter Output type:", font=('bold',12))
     output_label.place(x=160, y=140)
-    input_output = tk.OptionMenu(win,output_text,*DataTypes)
+    input_output = ttk.OptionMenu(win,output_text,*DataTypes)
     input_output.place(x=385,y=135)
 
     # Listbox that will show reviewed
-    search_results = Listbox(win, height=8, width=50, border=0)
-    search_results.grid(row=10, column=0, columnspan=3, rowspan=6, pady=20, padx=20)
-    search_results.place(x=98, y=275)
+    search_results = Listbox(win, height=20, width=80, border=0,justify=CENTER)
+    #search_results.grid(row=10, column=0, columnspan=3, rowspan=6, pady=20, padx=20)
+    search_results.place(x=100, y=290)
     # Create scrollbar
-    scrollbar = Scrollbar(win,orient='vertical',command=search_results.yview)
-    scrollbar.grid(row=8, column=3,sticky='ns')
-    search_results['yscrollcommand'] = scrollbar.set
+    scrollbar = ttk.Scrollbar(win,orient='vertical')
+    scrollbar.pack(side="right", fill="y")
 
-
-
-    scrollbar2 = Scrollbar(win,orient='horizontal',command=search_results.xview)
-    scrollbar2.grid(row=15, column=1,sticky='ew')
+    scrollbar2 = ttk.Scrollbar(win,orient='horizontal')
+    scrollbar2.pack(side="bottom", fill="x")
     # Set scroll to listbox
     # search_results.configure(yscrollcommand=scrollbar.set)
     search_results.configure(xscrollcommand=scrollbar2.set)
+    
+    search_results.config(yscrollcommand = scrollbar.set, xscrollcommand = scrollbar2.set)
 
+    # Set scroll to listbox
+    scrollbar.config(command=search_results.yview)
+    scrollbar2.config(command=search_results.xview)
 
     #buttons
-    search_but = tk.Button(win,text='Search', width=12,command=search)
+    search_but = ttk.Button(win,text='Search', width=12,command=search)
     search_but.place(x=220,y=200)
     #clear
-    clear_but = tk.Button(win,text='Clear', width=12,command=clear_search_res)
+    clear_but = ttk.Button(win,text='Clear', width=12,command=clear_search_res)
     clear_but.place(x=370,y=200)
     # canvas1.create_window(200, 140, window=entry1)
     win.mainloop()
