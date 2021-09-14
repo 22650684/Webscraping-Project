@@ -306,9 +306,16 @@ def main():
             updateDiv = fullHTML.find("div", class_="author_response comment public")
             updID = updateDiv.attrs["id"]
             blockText = updateDiv.find("blockquote")
+            updateTime = updateDiv.find("a", class_="share-link")
+            fullTime = updateTime.attrs["title"]
+            
+            upTime = open("Update_date_"+updID,"ab")
+            upTime.write(str(fullTime).encode())
             updateDiv = open("Update_"+updID, "ab")
             updateDiv.write(blockText.text.encode())
+            
             updateDiv.close()
+            upTime.close()
         except:
             nc=3
         #update = (updateID,updateText,updateUsername,str(num))
