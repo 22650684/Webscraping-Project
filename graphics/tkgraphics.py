@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
-from ttkthemes.themed_tk import ThemedTk
-from ttkthemes.themed_style import ThemedStyle
+# from ttkthemes.themed_tk import ThemedTk
+# from ttkthemes.themed_style import ThemedStyle
 import sqlite3
 
 conn = sqlite3.connect('test3.db')
