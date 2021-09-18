@@ -120,16 +120,20 @@ def main():
             continue
 
         respID = fullHTML.find_all("ul" , class_="response-supplemental clearfix")
-        insideLoop = False
-        #If the id is actually a response id then do not re-download
-        for ip in respID:
-            #print(ip.attrs["data-po-response-id"])
-            if str(ip.attrs["data-po-response-id"]) == str(num):
-                false_urls +=1
-                insideLoop = True
-                continue
-        if insideLoop:
-            insideLoop = False
+        # insideLoop = False
+        # #If the id is actually a response id then do not re-download
+        # for ip in respID:
+        #     #print(ip.attrs["data-po-response-id"])
+        #     if str(ip.attrs["data-po-response-id"]) == str(num):
+        #         false_urls +=1
+        #         insideLoop = True
+        #         continue
+        # if insideLoop:
+        #     insideLoop = False
+        #     continue
+
+        realID = fullHTML.find("article")
+        if str(realID.attrs["data-po-opinionid"]) != str(num):
             continue
 
         os.mkdir(str(num))
