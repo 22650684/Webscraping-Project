@@ -27,14 +27,14 @@ def create_db(conn):
             ResponseInfo TEXT,
             ResponseTime TEXT,
             storyID INT NOT NULL,
-            FOREIGN KEY (storyID) REFERENCES Story (StoryID) )''')
+            FOREIGN KEY (storyID) REFERENCES Review (StoryID) )''')
 
         conn.execute('''CREATE TABLE IF NOT EXISTS Updates
             (UpdateID INT NOT NULL PRIMARY KEY,
             Update TEXT ,
             updateUsername Text,
             storyID INT NOT NULL,
-            FOREIGN KEY (storyID) REFERENCES Story (StoryID) )''')
+            FOREIGN KEY (storyID) REFERENCES Review (StoryID) )''')
         conn.commit()
         print("Table created successfully")
     except:
