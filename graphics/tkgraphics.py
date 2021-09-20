@@ -117,7 +117,7 @@ def create_response(conn, allResponse):
     conn.commit()
 
 def create_update(conn, allUpdate):
-    sql = ''' INSERT INTO Updates(UpdateID,Update,updateUsername,storyID) VALUES(?,?,?,?)'''
+    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateUsername,storyID) VALUES(?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, allUpdate)
     conn.commit()
