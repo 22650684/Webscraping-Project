@@ -19,22 +19,22 @@ def create_db(conn):
             goodTag TEXT,
             similarTag TEXT,
             improvedTag TEXT,
-            feelTag TEXT)''')
+            feelTag TEXT);''')
 
-        conn.execute('''CREATE TABLE IF NOT EXISTS Response
-            (ResponseID INT NOT NULL PRIMARY KEY,
+        conn.execute('''CREATE TABLE IF NOT EXISTS Response (
+            ResponseID INT NOT NULL PRIMARY KEY,
             Response TEXT ,
             ResponseInfo TEXT,
             ResponseTime TEXT,
             storyID INT NOT NULL,
-            FOREIGN KEY (storyID) REFERENCES Review (StoryID) )''')
+            FOREIGN KEY (storyID) REFERENCES Review (StoryID) );''')
 
-        conn.execute('''CREATE TABLE IF NOT EXISTS Updates
-            (UpdateID INT NOT NULL PRIMARY KEY,
-            Update TEXT ,
-            updateUsername Text,
+        conn.execute('''CREATE TABLE IF NOT EXISTS userUpdates (
+            UpdateID INT NOT NULL PRIMARY KEY,
+            UpdateText TEXT ,
+            updateUsername TEXT,
             storyID INT NOT NULL,
-            FOREIGN KEY (storyID) REFERENCES Review (StoryID) )''')
+            FOREIGN KEY (storyID) REFERENCES Review (StoryID) );''')
         conn.commit()
         print("Table created successfully")
     except:
@@ -53,7 +53,7 @@ def create_response(conn, allResponse):
     conn.commit()
 
 def create_update(conn, allUpdate):
-    sql = ''' INSERT INTO Updates(UpdateID,Update,updateUsername,storyID) VALUES(?,?,?,?)'''
+    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateUsername,storyID) VALUES(?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, allUpdate)
     conn.commit()
@@ -81,7 +81,7 @@ def select_story_res(conn, storyId):
 
 def select_story_update(conn, storyId):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM Updates WHERE storyID = {}".format(storyId))
+    cur.execute("SELECT * FROM userUpdates WHERE storyID = {}".format(storyId))
     updateDetails = cur.fetchall()
     for update in updateDetails:
         print(update)    
