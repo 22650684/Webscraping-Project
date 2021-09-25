@@ -87,7 +87,7 @@ def select_story_update(conn, storyId):
         print(update)    
 
 def main():
-    conn = sqlite3.connect('test5.db')
+    conn = sqlite3.connect('test7.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
@@ -95,7 +95,7 @@ def main():
     # For the complete website scrape between 50,000 and 90,000
     for num in range(83100,83130):
         os.chdir(origin)
-        id = "_" + str(num)
+        id = str(num) + "_" 
         goodStr = ""
         similarStr = ""
         improvedStr = ""
@@ -134,6 +134,7 @@ def main():
 
         realID = fullHTML.find("article")
         if str(realID.attrs["data-po-opinionid"]) != str(num):
+            false_urls +=1
             continue
 
         os.mkdir(str(num))
@@ -146,16 +147,18 @@ def main():
         # tag parent divs
 
         # Getting the actual review
-        review = fullHTML.find(id="opinion_body")
-        f = open("Story" + id, "ab")
-        f.write(review.text.encode())
+        revHTML = fullHTML.find(id="opinion_body")
+        f = open(id+"Story", "ab")
+        review = revHTML.text.replace("\n","")
+        review = review.replace("\r","")
+        f.write(review.encode())
         f.close
 
         # Getting time of review
         timediv = fullHTML.find("time")
         timeSub = timediv.attrs["datetime"]
-        time = open("Date"+id, "ab")
-        time.write(str(timeSub).encode())
+        time = open(id+"Date", "ab")
+        time.write((str(timeSub).replace("T",",")).encode())
         time.close()
 
         # get all good,bad,feeling tags
@@ -166,65 +169,98 @@ def main():
 
             if "What was good?"  in checker:
                 for tag in tags:
-                    # good.append(tag.text)
                     goodStr += tag.text
+                    goodStr += ", "
 
             
             if "What could be improved?" in checker:
                 for tag in tags:
                     # improved.append(tag.text)
                     improvedStr += tag.text
+                    improvedStr += ", "
 
             if "How did you feel?" in checker:
                 for tag in tags:
                     # feel.append(tag.text)
                     feelStr += tag.text
+                    feelStr += ", "
 
-        g = open("Good_Tag"+id, "ab")
-        b = open("Improved_Tag"+id, "ab")
-        feel = open("Feel_Tag"+id, "ab")
+        g = open(id+"Good_Tag", "ab")
+        b = open(id+"Improved_Tag", "ab")
+        feel = open(id+"Feel_Tag", "ab")
+        goodCp = goodStr
+        improveCp = improvedStr
+        feelCp = feelStr
+        # for line in goodStr:
+        #     if line != '':
+        #         goodCp += line 
+        
+        goodCp = goodStr.replace("  ","")
+        goodCp = goodCp.replace("\r","")
+        goodCp = goodCp.replace("\n","")
+        goodCp = goodCp[:-2]
 
-        g.write(goodStr.encode())
-        b.write(improvedStr.encode())
-        feel.write(feelStr.encode())
+        improveCp = improvedStr.replace("  ","")
+        improveCp = improveCp.replace("\r","")
+        improveCp = improveCp.replace("\n","")
+        improveCp = improveCp[:-2]
+
+        feelCp = feelStr.replace("  ","")
+        feelCp = feelCp.replace("\r","")
+        feelCp = feelCp.replace("\n","")
+        feelCp = feelCp[:-2]
+
+        # for i in range(len(goodCp)):
+        #     if goodCp[i] == " ":
+        #         if goodCp[i+1] == " ":
+        #             goodCp[i+1] = ""
+        g.write(goodCp.encode())
+        b.write(improveCp.encode())
+        feel.write(feelCp.encode())
         g.close()
         b.close()
         feel.close()
-
         # Getting similar tags
         moreAbout = fullHTML.find_all("div", class_="other-tags")
         for i in moreAbout:
             tags = i.find_all("a", class_="inline-block font-c-1 tooltip")
             for tag in tags:
-                # similar.append(tag.text)
                 similarStr += tag.text
-        similar = open("Similar"+id,"ab")
-        similar.write(similarStr.encode())
+                similarStr += ", "
+        similarCp = similarStr
+        similarCp = similarStr.replace("  ","")
+        similarCp = similarCp.replace("\r","")
+        similarCp = similarCp.replace("\n","")
+        similarCp = similarCp[:-2]
+
+        similar = open(id+"Similar","ab")
+        similar.write(similarCp.encode())
         similar.close()
         
         # Getting username
         userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
         userDiv = userNameAll.find("div")
-        username = open("Username"+id,"ab")
-        username.write(userDiv.text.encode())
-        username.close()
-        
+        username = open(id+"Username","ab")
+        userN = userDiv.text.replace("\r","")
+        userN = userN.replace("\n","")
+        userN = userN.replace("  ","")
+        username.write(userN.encode())
+        username.close()        
   
         #Get number of reads
         currentList =  fullHTML.find("li", id="subscribers_read_count")
         try:
             currentReadNum = currentList.strong
         except AttributeError:
-            nc=1
+            pass
         readNum = ""
-        currentreadNum = open("Activity"+id,"ab")
+        currentreadNum = open(id+"Activity","ab")
         for i in currentReadNum:
-            print(i)
             try:
                 currentreadNum.write(i.encode())
                 readNum += i
             except:
-                n34=0
+                pass
         currentreadNum.close()
 
         # Getting responses
@@ -241,26 +277,30 @@ def main():
         # Getting location
         location = fullHTML.find_all("span", itemtype="http://schema.org/Organization")
         for loc in location:
-            locationStr += loc.text
-        locations = open("About"+id, "ab")
-        locations.write(locationStr.encode())
+            i = loc.find("span", itemprop="name")
+            locationStr += i.text
+            locationStr += ", "
+        locationCp = locationStr[:-2]
+        locations = open(id+"About", "ab")
+        locations.write(locationCp.encode())
         locations.close()
         
         titleTxt = ""
         # Get the title 
         titleTag = fullHTML.find("title")
-        title = open("Title"+id,"ab")
+        title = open(id+ "Title","ab")
         for i in titleTag:
             titleTxt += i
-            title.write(i.encode())
+        titleT = titleTxt.replace("| Care Opinion", "")
+        title.write(titleT.encode())
         title.close()
         prog = ""
         #Get the progress
         whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
         progressOfRev = whereReviewUpToTag.find("h2")
-        progress = open("Progress"+id,"ab")
+        progress = open(id+"Progress","ab")
         for i in progressOfRev:
-            print(i)
+            # print(i)
             progress.write(i.encode())
             prog += i
         progress.close()
@@ -278,28 +318,44 @@ def main():
         #     responseDateStr += date.text
         # resDate.write(responseDateStr.encode())
         # resDate.close()
-        for id in respID:
-            responseStr = ""
-            resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
+        for ide in respID:
+            responseString = ""
+            responseHeaderStr = ""
+            resp = fullHTML.find("div", id=ide.attrs["data-po-response-id"])
             responseHTML = resp.find_all("blockquote", class_="froala-view")
-            dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
-            
+            dateSumbmitted = resp.find("span", class_="response-submission-footer-content")           
             responseHeader = resp.find("div", class_= "inner-expansion-profile")
+
             try:
                 responseHeaderStr = responseHeader.text
             except:
-                nc=1
-            resHeader = open("Response_Header_"+id.attrs["data-po-response-id"], "ab")
-            resHeader.write(responseHeaderStr.encode())
+                pass
+            resHeader = open(str(num) + "_" + ide.attrs["data-po-response-id"] +  "_" + "Response_Header", "ab")
+            responseCp = responseHeaderStr
+            responseCp = responseHeaderStr.replace("  ","")
+            responseCp = responseCp.replace("\r",",")
+            responseCp = responseCp.replace("\n",",")
+            responseCp = responseCp.replace(",,,,",",")
+            responseCp = responseCp.replace(",,,",",")
+            responseCp = responseCp.replace(",,",",")
+            responseCp = responseCp.replace(", ,",",")
+            responseCp = responseCp[:-1]
+            responseCp = responseCp[1:]
+            responseCp = responseCp.replace(", ",",")
+            responseCp = responseCp.replace(",",", ")
+            resHeader.write(responseCp.encode())
             resHeader.close()
+
             for i in responseHTML:
-                resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
-                respTime = open("Response_Time"+id.attrs["data-po-response-id"],"ab")
+                resp = open(str(num) + "_"+ide.attrs["data-po-response-id"]+ "_"+ "Response","ab")
+                respTime = open(str(num) + "_"+ide.attrs["data-po-response-id"]+ "_" + "Response_Time","ab")
                 respTime.write(dateSumbmitted.text.encode())
-                resp.write(i.text.encode())
-                resp.close()
-                responseStr += i.text
-            res = (int(id.attrs["data-po-response-id"]),responseStr,responseHeaderStr,dateSumbmitted.text,str(num))
+                responseString += i.text
+            responseStr = responseString.replace("\r","")
+            responseStr = responseStr.replace("\n","")
+            resp.write(responseStr.encode())
+            resp.close()
+            res = (int(ide.attrs["data-po-response-id"]),responseStr,responseCp,dateSumbmitted.text,str(num))
             create_response(conn, res)
                     
         #Make updates folder; TODO where are update 
@@ -310,22 +366,24 @@ def main():
             updateDiv = fullHTML.find_all("div", class_="author_response comment public")
             for i in updateDiv:
                 updID = i.attrs["id"]
-                blockText = i.find("blockquote")
-                updateDiv = open("Update_"+updID, "ab")
-                updateDiv.write(blockText.text.encode())
+                blockTextSearch = i.find("blockquote")
+                updateDiv = open(str(num) + "_"+updID+ "_" + "Update", "ab")
+                blockText = blockTextSearch.text.replace("\r","")
+                blockText = blockText.replace("\n","")
+                updateDiv.write(blockText.encode())
                 updateDiv.close()
 
                 updateTime = i.find("a", class_="share-link")
                 fullTime = updateTime.attrs["title"]
-                upTime = open("Update_date_"+updID,"ab")
+                upTime = open(str(num) + "_" +updID+ "_" + "Update_date","ab")
                 upTime.write(str(fullTime).encode())
                 upTime.close()
         except:
-            nc=3
+            pass
         #update = (updateID,updateText,updateUsername,str(num))
         #create_update(conn,update)
 
-        rev = (str(num),review.text,userDiv.text,titleTxt,locationStr,timeSub,readNum,prog,goodStr,similarStr,improvedStr,feelStr)
+        rev = (str(num),review,userN,titleT,locationCp,timeSub,readNum,prog,goodCp,similarCp,improveCp,feelCp)
         create_review(conn,rev)
         #SELECT id From Review WHERE goodTag LIKE '%word1%'
     print(false_urls)
