@@ -33,6 +33,7 @@ def create_db(conn):
             UpdateID INT NOT NULL PRIMARY KEY,
             UpdateText TEXT ,
             updateUsername TEXT,
+            updateTime TEXT,
             storyID INT NOT NULL,
             FOREIGN KEY (storyID) REFERENCES Review (StoryID) );''')
         conn.commit()
@@ -53,7 +54,7 @@ def create_response(conn, allResponse):
     conn.commit()
 
 def create_update(conn, allUpdate):
-    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateUsername,storyID) VALUES(?,?,?,?)'''
+    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateUsername,updateTime,storyID) VALUES(?,?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, allUpdate)
     conn.commit()
@@ -380,7 +381,7 @@ def main():
                 upTime.close()
         except:
             pass
-        #update = (updateID,updateText,updateUsername,str(num))
+        #updates = (updID,blockText,updateUsername,fullTime,str(num))
         #create_update(conn,update)
 
         rev = (str(num),review,userN,titleT,locationCp,timeSub,readNum,prog,goodCp,similarCp,improveCp,feelCp)
