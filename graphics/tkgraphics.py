@@ -58,35 +58,80 @@ def select_specific_info(conn,tagName,similarTag,outputType):
     elif "id" in tagName:
         searchTerm += "StoryID="
         similarTerm += similarTag
+    elif "responseID" in tagName:
+        searchTerm += "ResponseID="
+        similarTerm += similarTag
+    elif "updateID" in tagName:
+        searchTerm += "UpdateID="
+        similarTerm += similarTag
 
     outputTag = "" 
     if "id" in outputType:
         outputTag = "StoryID"
+        dbNum = 1
     elif "stor" in outputType:
        outputTag = "story"
+       dbNum = 1
     elif "all" in outputType:
         outputTag = "*"
+        dbNum = 1
     elif "sim" in outputType:
         outputTag = "similarTag"
+        dbNum = 1
     elif "good" in outputType:
         outputTag = "goodTag"
+        dbNum = 1
     elif "loc" in outputType:
         outputTag = "locationTag"
+        dbNum = 1
     elif "feel" in outputType:
         outputTag = "feelTag"
+        dbNum = 1
     elif "activit" in outputType:
         outputTag = "Activity"
+        dbNum = 1
     elif "prog" in outputType:
         outputTag = "Progress"
+        dbNum = 1
     elif "titl" in outputType:
         outputTag = "Title"
+        dbNum = 1
     elif "abou" in outputType:
         outputTag = "About"
+        dbNum = 1
+    elif "responseid" in outputType:
+        outputTag = "ResponseID"
+        dbNum = 2
+    elif "response" in outputType:
+        outputTag = "Response"
+        dbNum = 2
+    elif "responseinfo" in outputType:
+        outputTag = "ResponseInfo"
+        dbNum = 2
+    elif "responsetime" in outputType:
+        outputTag = "ResponseTime"
+        dbNum = 2
+    elif "updateid" in outputType:
+        outputTag = "UpdateID"
+        dbNum = 3
+    elif "update" in outputType:
+        outputTag = "UpdateText"
+        dbNum = 3
+    elif "updatetime" in outputType:
+        outputTag = "updateTime"
+        dbNum = 3
 
     #TODO does not recognise id because it is a number not string
     cur = conn.cursor()
-    cur.execute("SELECT {} FROM Review WHERE {} {}".format(outputTag,searchTerm,similarTerm))
-    print("SELECT {} FROM Review WHERE {}{}".format(outputTag,searchTerm,similarTerm))
+    if dbNum == 1:
+        cur.execute("SELECT {} FROM Review WHERE {} {}".format(outputTag,searchTerm,similarTerm))
+        print("SELECT {} FROM Review WHERE {}{}".format(outputTag,searchTerm,similarTerm))
+    elif dbNum == 2:
+        cur.execute("SELECT {} FROM Response WHERE {} {}".format(outputTag,searchTerm,similarTerm))
+        print("SELECT {} FROM Response WHERE {}{}".format(outputTag,searchTerm,similarTerm))
+    elif dbNum == 3:
+        cur.execute("SELECT {} FROM userUpdates WHERE {} {}".format(outputTag,searchTerm,similarTerm))
+        print("SELECT {} FROM userUpdates WHERE {}{}".format(outputTag,searchTerm,similarTerm))
     # cur.execute("SELECT story FROM Review WHERE id=61079".format(outputTag,searchTerm,similarTerm))
     allTag = cur.fetchall()
     return allTag
@@ -117,7 +162,7 @@ def create_response(conn, allResponse):
     conn.commit()
 
 def create_update(conn, allUpdate):
-    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateUsername,storyID) VALUES(?,?,?,?)'''
+    sql = ''' INSERT INTO userUpdates(UpdateID,UpdateText,updateTime,storyID) VALUES(?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, allUpdate)
     conn.commit()
