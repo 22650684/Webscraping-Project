@@ -102,9 +102,14 @@ class TestmultiURL_addedtags(unittest.TestCase):
 
         updateDiv = fullHTML.find_all("div", class_="author_response comment public")
         updateHTML = updateDiv.find("blockquote")
-        actual_update = updateHTML
         expected_update = "Thank you Neil for your detailed response, advising the actions being taken in response to the issues I noted in my patient story. I believe an urgent GP after hours, in addition to the one located further away from the hospital, is in my opinion, likely not able to be undertaken by the hospital itself, though may be something the wider GP network may consider. Again, given what I witnessed, all ED staff need to be commended on their obvious efforts. I cannot recommend the care I have experienced as a patient at Fiona Stanley highly enough."
+        actual_update = updateHTML
         self.assertEqual(expected_update, actual_update)    
+
+        updateTime = updateDiv.find("a", class_="share-link")
+        expected_updateTime = "Submitted on 03/09/2021 at 11:33 and published on Care Opinion at 11:39"
+        actual_updateTime = updateTime
+        self.assertEqual(expected_updateTime, actual_updateTime)
 
     if __name__ == "__main__":
         unittest.main()

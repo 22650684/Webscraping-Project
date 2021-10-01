@@ -93,7 +93,7 @@ def main():
     # Start in the file where all the info will go
     origin = "/Users/jakha/Documents/Professional Computing/webscrape_files"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(83100,83130):
+    for num in range(83028,83030):
         os.chdir(origin)
         id = "_" + str(num)
         goodStr = ""
