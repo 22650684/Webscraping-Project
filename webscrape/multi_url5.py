@@ -87,13 +87,13 @@ def select_story_update(conn, storyId):
         print(update)    
 
 def main():
-    conn = sqlite3.connect('test7.db')
+    conn = sqlite3.connect('deletethis.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
     origin = "/Users/maxdi/source/webscraper-inital/allRevs"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(83100,83130):
+    for num in range(72919,72920):
         os.chdir(origin)
         id = str(num) + "_" 
         goodStr = ""
@@ -378,10 +378,11 @@ def main():
                 upTime = open(str(num) + "_" +updID+ "_" + "Update_date","ab")
                 upTime.write(str(fullTime).encode())
                 upTime.close()
+                update = (updID,blockText,fullTime,str(num))
+                create_update(conn,update)
         except:
             pass
-        updates = (updID,blockText,fullTime,str(num))
-        create_update(conn,update)
+        
 
         rev = (str(num),review,userN,titleT,locationCp,timeSub,readNum,prog,goodCp,similarCp,improveCp,feelCp)
         create_review(conn,rev)
