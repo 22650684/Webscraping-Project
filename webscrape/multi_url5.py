@@ -156,9 +156,10 @@ def main():
 
         # Getting time of review
         timediv = fullHTML.find("time")
-        timeSub = timediv.attrs["datetime"]
+        timePreSub = timediv.attrs["datetime"]
         time = open(id+"Date", "ab")
-        time.write((str(timeSub).replace("T",",")).encode())
+        timeSub = str(timePreSub).replace("T",",")
+        time.write(timeSub.encode())
         time.close()
 
         # get all good,bad,feeling tags
