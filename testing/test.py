@@ -1,5 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import re
 import unittest
 
 class Test(unittest.TestCase):
@@ -159,7 +160,17 @@ class Test(unittest.TestCase):
         self.assertIsNotNone(pagecontent)
 
     def test_response_url(self):
-        self.assertTrue("https://www.careopinion.org.au/83029#83167") 
+        regex = ("((http|https)://)(www.)?" +
+             "[a-zA-Z0-9@:%._\\+~#?&//=]" +
+             "{2,256}\\.[a-z]" +
+             "{2,6}\\b([-a-zA-Z0-9@:%" +
+             "._\\+~#?&//=]*)")
+        p = re.compile(regex)
+        if(re.search(p, "https://www.careopinion.org.au/83029#83167")): 
+            return True
+        else:
+            return False
+        #self.assertTrue("https://www.careopinion.org.au/83029#83167") 
 
     def test_update_url(self):
         self.assertTrue("https://www.careopinion.org.au/83029#83181") 
