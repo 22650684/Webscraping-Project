@@ -117,8 +117,21 @@ class Test(unittest.TestCase):
         self.assertEqual(expected_response, actual_response)
 
     def test_response_header(self):
-        responseHeader = resp.find("div", class_= "inner-expansion-profile")
-        expected_responseHeader = "Neil Doverty Executive Director, Fiona Stanley Fremantle Hospitals Group, South Metropolitan Health Service"
+        resp = Test.bs.find('div', {'id':'83167'})
+        responseHeader = resp.find("div", class_= "inner-expansion-name").get_text()
+        responseHeader = responseHeader.replace("\n","")
+        responseHeader = responseHeader.strip()
+        expected_responseHeader = "Neil Doverty"
+        actual_responseHeader = responseHeader
+        self.assertEqual(expected_responseHeader, actual_responseHeader)
+
+    def test_response_header_2(self):
+        resp = Test.bs.find('div', {'id':'83167'})
+        responseHeader = resp.find("div", class_= "inner-expansion-profile-signature").get_text()
+        responseHeader = responseHeader.replace("\n","")
+        responseHeader = responseHeader.replace("\r","")
+        responseHeader = " ".join(responseHeader.split())
+        expected_responseHeader = "Executive Director, Fiona Stanley Fremantle Hospitals Group, South Metropolitan Health Service"
         actual_responseHeader = responseHeader
         self.assertEqual(expected_responseHeader, actual_responseHeader)
 
