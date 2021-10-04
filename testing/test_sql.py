@@ -50,7 +50,7 @@ class Test(unittest.TestCase):
         cur = conn.cursor()
         unique_times = cur.execute("SELECT COUNT(DISTINCT updateTime) FROM userUpdates")
         #In final we will assert = 10,500
-        row_num = cur.execute("SELECT COUNT(1) FROM updateUpdates")
+        row_num = cur.execute("SELECT COUNT(1) FROM userUpdates")
         self.assertEqual(unique_times, row_num)
 
 if __name__ == '__main__':
