@@ -158,7 +158,11 @@ class Test(unittest.TestCase):
         pagecontent = Test.bs.find('div',{'id':'container'})
         self.assertIsNotNone(pagecontent)
 
+    def test_response_url(self):
+        self.assertTrue("https://www.careopinion.org.au/83029#83167") 
 
+    def test_update_url(self):
+        self.assertTrue("https://www.careopinion.org.au/83029#83181") 
 
 if __name__ == "__main__":
     unittest.main()
