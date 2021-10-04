@@ -193,7 +193,8 @@ def webscrape_url():
     else:
         lower_while = 0
         higher_while = 1 
-    if (not high.isdecimal()) or (not lower.isdecimal()):
+    #Makes sure you can do both
+    if ((not high.isdecimal()) or (not lower.isdecimal())) and url=="":
         error = "Enter only numbers in the range"
         search_results.insert(END,error)
         return
