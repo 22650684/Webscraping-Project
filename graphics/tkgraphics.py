@@ -757,6 +757,8 @@ def main():
     global tag_text
     global search_results
     global web_url
+    global high_range_url
+    global low_range_url
     win = tk.Tk()
 
     DataTypes = [
@@ -780,13 +782,15 @@ def main():
     #style.configure("TLabel", background= setColour)
     style.configure("TButton", background= setColour)
     style.configure("OptionMenu", background= setColour)
+    backgrounds = ["cropmulticols.png","bluepurple.png","cropbluepurple.png","morepurple.png","blueback.png"]
+
     
     #Part title
     part_label = tk.Label
     win.title("DB search")
-    win.geometry('700x700')
+    win.geometry('1000x1000')
     win.resizable(False,False)
-    win.backGroundImage = PhotoImage(file="background.png")
+    win.backGroundImage = PhotoImage(file=backgrounds[4])
     win.backGroundImageLabel=Label(win, image=win.backGroundImage)
     win.backGroundImageLabel.place(x=0,y=0)
     # title_label = tk.Label(win,text = "Welcome! Use this to search for reviews in the databse:", font=('bold',10),pady=20,padx=100)
@@ -841,9 +845,9 @@ def main():
     input_high_range.place(x=600,y=270)
 
     # Listbox that will show reviewed
-    search_results = Listbox(win, height=20, width=80, border=0,justify=LEFT)
+    search_results = Listbox(win, height=30, width=100, border=0,justify=LEFT)
     #search_results.grid(row=10, column=0, columnspan=3, rowspan=6, pady=20, padx=20)
-    search_results.place(x=105, y=270)
+    search_results.place(x=190, y=400)
     # Create scrollbar
     scrollbar = ttk.Scrollbar(win,orient='vertical')
     scrollbar.pack(side="right", fill="y")
