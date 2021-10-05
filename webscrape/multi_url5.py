@@ -91,9 +91,9 @@ def main():
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
-    origin = "/Users/maxdi/source/webscraper-inital/allRevs"
+    origin = "/Users/jakha/Documents/Professional Computing"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(72919,72920):
+    for num in range(83028,83030):
         os.chdir(origin)
         id = str(num) + "_" 
         goodStr = ""
@@ -295,15 +295,19 @@ def main():
         titleT = titleTxt.replace("| Care Opinion", "")
         title.write(titleT.encode())
         title.close()
-        prog = ""
+
         #Get the progress
-        whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
-        progressOfRev = whereReviewUpToTag.find("h2")
+        prog = ""
+        whereReviewUpToTag = fullHTML.find("p", class_="margin-top-1 margin-bottom-0")
+        progressOfRev = whereReviewUpToTag.text
         progress = open(id+"Progress","ab")
         for i in progressOfRev:
-            # print(i)
-            progress.write(i.encode())
             prog += i
+        prog = prog.replace("\r" ,"")
+        prog = prog.replace("\n", "")
+        prog = prog.strip()
+
+        progress.write(prog.encode())
         progress.close()
 
         #Make the response folder and add response names
