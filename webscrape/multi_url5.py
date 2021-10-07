@@ -87,13 +87,13 @@ def select_story_update(conn, storyId):
         print(update)    
 
 def main():
-    conn = sqlite3.connect('deletethis.db')
+    conn = sqlite3.connect('deleteth1.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
-    origin = "/Users/jakha/Documents/Professional Computing"
+    origin = "/Users/maxdi/source/webscraper-inital/testRevs"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(83028,83030):
+    for num in range(67172,67173):
         os.chdir(origin)
         id = str(num) + "_" 
         goodStr = ""
@@ -151,14 +151,20 @@ def main():
         f = open(id+"Story", "ab")
         review = revHTML.text.replace("\n","")
         review = review.replace("\r","")
+        if(("@" not in review) and ("http" not in review) and ("www." not in review)):
+            review = review.replace(".",". ")
+        review = review.replace(",",", ")
+        review = review.replace("  "," ")
+        
         f.write(review.encode())
         f.close
 
         # Getting time of review
         timediv = fullHTML.find("time")
-        timePreSub = timediv.attrs["datetime"]
+        timeSub = timediv.attrs["datetime"]
         time = open(id+"Date", "ab")
-        timeSub = str(timePreSub).replace("T",",")
+        timeSub =str(timeSub).replace("T",",")
+        timeSub =str(timeSub).replace("Z","")
         time.write(timeSub.encode())
         time.close()
 
@@ -306,7 +312,6 @@ def main():
         prog = prog.replace("\r" ,"")
         prog = prog.replace("\n", "")
         prog = prog.strip()
-
         progress.write(prog.encode())
         progress.close()
 
@@ -330,6 +335,7 @@ def main():
             responseHTML = resp.find_all("blockquote", class_="froala-view")
             dateSumbmitted = resp.find("span", class_="response-submission-footer-content")           
             responseHeader = resp.find("div", class_= "inner-expansion-profile")
+            userNameOnly = userN.split()[-1]
 
             try:
                 responseHeaderStr = responseHeader.text
@@ -338,15 +344,19 @@ def main():
             resHeader = open(str(num) + "_" + ide.attrs["data-po-response-id"] +  "_" + "Response_Header", "ab")
             responseCp = responseHeaderStr
             responseCp = responseHeaderStr.replace("  ","")
+            sep= "More"
+            responseCp = responseCp.split(sep, 1)[0]
             responseCp = responseCp.replace("\r",",")
             responseCp = responseCp.replace("\n",",")
+            responseCp = responseCp.replace(", ",",")
+            responseCp = responseCp.replace(", ,",",")
             responseCp = responseCp.replace(",,,,",",")
             responseCp = responseCp.replace(",,,",",")
             responseCp = responseCp.replace(",,",",")
             responseCp = responseCp.replace(", ,",",")
             responseCp = responseCp[:-1]
             responseCp = responseCp[1:]
-            responseCp = responseCp.replace(", ",",")
+            
             responseCp = responseCp.replace(",",", ")
             resHeader.write(responseCp.encode())
             resHeader.close()
@@ -358,6 +368,13 @@ def main():
                 responseString += i.text
             responseStr = responseString.replace("\r","")
             responseStr = responseStr.replace("\n","")
+            responseStr = responseStr.replace(userNameOnly,userNameOnly+", ",1)
+            responseStr = responseStr.replace(userNameOnly.capitalize(),userNameOnly.capitalize()+", ",1)
+            responseStr = responseStr.replace(", , ",", ")
+            responseStr = responseStr.replace(", ,",", ")
+            if(("@" not in responseStr) and ("http" not in responseStr) and ("www." not in responseStr)):
+                responseStr = responseStr.replace(".",". ")
+            responseStr = responseStr.replace("  "," ")
             resp.write(responseStr.encode())
             resp.close()
             res = (int(ide.attrs["data-po-response-id"]),responseStr,responseCp,dateSumbmitted.text,str(num))
