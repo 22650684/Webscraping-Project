@@ -87,13 +87,13 @@ def select_story_update(conn, storyId):
         print(update)    
 
 def main():
-    conn = sqlite3.connect('deletethis.db')
+    conn = sqlite3.connect('deleteth1.db')
     create_db(conn)
     false_urls = 0
     # Start in the file where all the info will go
     origin = "/Users/maxdi/source/webscraper-inital/testRevs"
     # For the complete website scrape between 50,000 and 90,000
-    for num in range(83028,83030):
+    for num in range(67172,67173):
         os.chdir(origin)
         id = str(num) + "_" 
         goodStr = ""
@@ -151,7 +151,8 @@ def main():
         f = open(id+"Story", "ab")
         review = revHTML.text.replace("\n","")
         review = review.replace("\r","")
-        review = review.replace(".",". ")
+        if(("@" not in review) and ("http" not in review) and ("www." not in review)):
+            review = review.replace(".",". ")
         review = review.replace(",",", ")
         review = review.replace("  "," ")
         
@@ -347,13 +348,15 @@ def main():
             responseCp = responseCp.split(sep, 1)[0]
             responseCp = responseCp.replace("\r",",")
             responseCp = responseCp.replace("\n",",")
+            responseCp = responseCp.replace(", ",",")
+            responseCp = responseCp.replace(", ,",",")
             responseCp = responseCp.replace(",,,,",",")
             responseCp = responseCp.replace(",,,",",")
             responseCp = responseCp.replace(",,",",")
             responseCp = responseCp.replace(", ,",",")
             responseCp = responseCp[:-1]
             responseCp = responseCp[1:]
-            responseCp = responseCp.replace(", ",",")
+            
             responseCp = responseCp.replace(",",", ")
             resHeader.write(responseCp.encode())
             resHeader.close()
@@ -368,7 +371,9 @@ def main():
             responseStr = responseStr.replace(userNameOnly,userNameOnly+", ",1)
             responseStr = responseStr.replace(userNameOnly.capitalize(),userNameOnly.capitalize()+", ",1)
             responseStr = responseStr.replace(", , ",", ")
-            responseStr = responseStr.replace(".",". ")
+            responseStr = responseStr.replace(", ,",", ")
+            if(("@" not in responseStr) and ("http" not in responseStr) and ("www." not in responseStr)):
+                responseStr = responseStr.replace(".",". ")
             responseStr = responseStr.replace("  "," ")
             resp.write(responseStr.encode())
             resp.close()
