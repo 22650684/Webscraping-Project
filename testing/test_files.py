@@ -15,67 +15,109 @@ def CheckAbout(file, counter, id):
     #if file contains digit true, not string and not empty
     pass
 
-def CheckDate(file, counter):
+def CheckDate(file, empty_counter, format_counter):
     if IfEmptyFile(file) == True:
-        counter += 1
+        empty_counter += 1
     else:
-        format = re.search("[0-2021][-][0-12][-][0-32][,][0-24][:][0-59]", file)
+        format = re.search("[0-2021][-][0-12][-][0-32][,][0-23][:][0-59]", file)
         if file == format:
             return True
+        else:
+            format_counter += 1
 
 def CheckTags(file):
         #check completely
         pass
     #if file contains strings and commas after every one, two or three words
 
-def CheckProgress(file, counter):
+def CheckProgress(file, empty_counter, format_counter):
     if IfEmptyFile(file) == True:
-        counter += 1
+        empty_counter += 1
     else:
-        format = re.search()
-    #if file has correct format -> starts with 'this story has'
-    #if file not empty
-    pass
+        format = re.search("^This story has", file)
+        if file == format:
+            return True
+        else: 
+            format_counter += 1
 
-def CheckStory(file):
-    #if file not empty
-    pass
+def CheckStory(file, empty_counter, format_counter):
+    if IfEmptyFile(file) == True:
+        empty_counter += 1
+    else:
+        pass
+    #contains string
 
-def CheckTitle(file):
+def CheckTitle(file, empty_counter):
+    if IfEmptyFile(file) == True:
+        empty_counter += 1
+    else:
+        pass
     #if file not empty
     #contains string and not numbers
-    pass
 
-def CheckUsername(file):
+def CheckUsername(file, empty_counter, format_counter):
+    if IfEmptyFile(file) == True:
+        empty_counter += 1
+    else:
+        format = re.search("^Posted By", file)
+        if file == format:
+            return True
+        else:
+            format_counter += 1
     #if file not empty
     #contains right format 'Posted By'
-    pass
 
 def CheckResponse(file):
+    if IfEmptyFile(file) == True:
+        pass
+    else:
+        #if file contains string
+        pass
     #if file not empty if meant to have response
     #if file contains string
-    pass 
 
 def CheckResponseHeader(file):
+    if IfEmptyFile(file) == True:
+        pass
+    else:
+        pass
     #if file not empty if meant to have response
     #if file contains string
     #if format right -> contains commas
     pass
 
-def CheckResponseTime(file):
+def CheckResponseTime(file, format_counter):
+    if IfEmptyFile(file) == True:
+        pass
+    else:
+        format = re.search("Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59]", file)
+        if file == format:
+            return True
+        else:
+            format_counter += 1
     #if file not empty if meant to have response
     #if file has right format 'Submitted on XXXXXX at XX:XX'
-    pass
 
 def CheckUpdate(file):
+    if IfEmptyFile(file) == True:
+        pass
+    else:
+        pass
     #if file not empty if meant to have update
     #if file has strings
     pass
 
-def CheckUpdateTime(file):
+def CheckUpdateTime(file, format_counter):
+    if IfEmptyFile(file) == True:
+        pass
+    else:
+        format = re.search("Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59] and published on Care Opinion at [0-23][:][0-59]")
     #if file not empty if meant to have update
     #if file right format 'Submitted on XXXXX at XX:XX and published ....'
-    pass
+        if file == format:
+            return True
+        else:
+            format_counter += 1
 
 def main():
     counter = 0
