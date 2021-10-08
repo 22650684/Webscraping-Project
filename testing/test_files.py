@@ -1,81 +1,109 @@
-import unittest
 import os
+import re
 
-#try with unit test
+def IfEmptyFile(file):
+    if os.path.getsize(file) == 0:
+        return True
+    else:
+        return False
 
-def CompareFiles(str_file1,str_file2):
-    '''
-    This function compares two long string texts and returns their 
-    differences as two sequences of unique lines, one list for each.
-    '''
-    #reading from text file and splitting str_file into lines - delimited by "\n"
-    file1_lines = str_file1.split("\n")
-    file2_lines = str_file2.split("\n")
+def CheckAbout(file, counter, id):
+    if IfEmptyFile(file) == True:
+        counter += 1
+    else:
+        print("find if contains digits")
+    #if file contains digit true, not string and not empty
+    pass
 
-    #unique lines to each one, store it in their respective lists
-    unique_file1 = []
-    unique_file2 = []
+def CheckDate(file, counter):
+    if IfEmptyFile(file) == True:
+        counter += 1
+    else:
+        format = re.search("[0-2021][-][0-12][-][0-32][,][0-24][:][0-59]", file)
+        if file == format:
+            return True
 
-    #unique lines in str1
-    for line1 in file1_lines:
-        if line1 !='':
-           if line1 not in file2_lines:
-              unique_file1.append(line1)
+def CheckTags(file):
+        #check completely
+        pass
+    #if file contains strings and commas after every one, two or three words
 
-    #unique lines in str2
-    for line2 in file2_lines:
-        if line2 != '':
-           if line2 not in file1_lines:
-              unique_file2.append(line2)
+def CheckProgress(file, counter):
+    if IfEmptyFile(file) == True:
+        counter += 1
+    else:
+        format = re.search()
+    #if file has correct format -> starts with 'this story has'
+    #if file not empty
+    pass
 
-    return unique_file1, unique_file2
+def CheckStory(file):
+    #if file not empty
+    pass
 
-def Masker(pattern_lines, file2mask):
-    '''
-    This function masks some fields (based on the pattern_lines) with 
-    dummy text to simplify the comparison
-    '''
-    #mask the values of all matches from the pattern_lines by a dummy data - 'xxxxxxxxxx'
-    for pattern in pattern_lines:
-        temp = pattern.findall(file2mask)
-        if len(temp) != 0:
-           for value in temp:
-               if isinstance(value, str):
-                  masked_file = file2mask.replace(str(value),'x'*10)
-               elif isinstance(value, tuple):
-                    for tup in value:
-                        masked_file = file2mask.replace(str(tup),'x'*10)
-    return masked_file
+def CheckTitle(file):
+    #if file not empty
+    #contains string and not numbers
+    pass
+
+def CheckUsername(file):
+    #if file not empty
+    #contains right format 'Posted By'
+    pass
+
+def CheckResponse(file):
+    #if file not empty if meant to have response
+    #if file contains string
+    pass 
+
+def CheckResponseHeader(file):
+    #if file not empty if meant to have response
+    #if file contains string
+    #if format right -> contains commas
+    pass
+
+def CheckResponseTime(file):
+    #if file not empty if meant to have response
+    #if file has right format 'Submitted on XXXXXX at XX:XX'
+    pass
+
+def CheckUpdate(file):
+    #if file not empty if meant to have update
+    #if file has strings
+    pass
+
+def CheckUpdateTime(file):
+    #if file not empty if meant to have update
+    #if file right format 'Submitted on XXXXX at XX:XX and published ....'
+    pass
 
 def main():
-    #using one manually checked folder to compare format with all other folders
-    #word or two words separated by comma for tags (feel, improved etc)
-    #use fopen to open files
-    #story shouldn't be empty
-    #title shouln't be empty
-    #time shouldn't be empty
-    #username shouldn't be empty
+    counter = 0
+    f_id_about = open("/Users/jakha/Documents/Professional Computing/webscrape_files/70000/70000_Date", "r")
 
-    file_about_path = ""
-    file_activity_path = ""
-    file_date_path = ""
-    file_feel_tag_path = ""
-    file_good_tag_path = ""
-    file_improved_tag_path = ""
-    file_similar_path = ""
-    file_story_path = ""
-    file_title_path = ""
-    file_username_path = ""
+    CheckAbout(f_id_about, counter)
 
-    file_response_path = ""
-    file_response_time = ""
+    path_all_files = "/Users/jakha/Documents/Professional Computing/webscrape_files"
 
-    file_update_path = ""
-    file_update_time = ""
+    # for num in range(70000, 70002):
+    #     id = str(num)
+    #     story_folder = os.path.join(path_all_files, id)
+        
+        
+    #     # f_id_about = open(story_folder + id + "_About")
+    #     f_id_activity = open(story_folder + id + "_Activity")
+    #     f_id_date = open(story_folder + id + "_Date")
+    #     f_id_feel = open(story_folder + id + "_Feel")
+    #     f_id_good = open(story_folder + id + "_Good")
+    #     f_id_improved = open(story_folder + id + "_Improved")
+    #     f_id_progress = open(story_folder + id + "_Progress")
+    #     f_id_similar = open(story_folder + id + "_Similar")
+    #     f_id_story = open(story_folder + id + "_Story")
+    #     f_id_title = open(story_folder + id + "_Title")
+    #     f_id_username = open(story_folder + id + "_Username")
 
-    origin = "/Users/jakha/Documents/Professional Computing/webscrape_files"
-    for num in range(50000, 90000):
-        id = str(num)
+    #     CheckDate()
+    
         #access each folder
         ###acesss all files in folder
         ###access files in response folder
@@ -83,3 +111,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
