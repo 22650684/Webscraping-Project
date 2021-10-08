@@ -226,20 +226,27 @@ class Test(unittest.TestCase):
         self.assertIsNotNone(pagecontent)
 
     def test_response_url(self):
-        regex = ("((http|https)://)(www.)?" +
-             "[a-zA-Z0-9@:%._\\+~#?&//=]" +
-             "{2,256}\\.[a-z]" +
-             "{2,6}\\b([-a-zA-Z0-9@:%" +
-             "._\\+~#?&//=]*)")
-        p = re.compile(regex)
-        if(re.search(p, "https://www.careopinion.org.au/83029#83167")): 
-            return True
-        else:
-            return False
-        #self.assertTrue("https://www.careopinion.org.au/83029#83167") 
+        response = Test.bs.find_all("div", class_="subscriber_response comment public response-header-container")
+        for i in response:
+            response_header = i.find("div",class_= "inner-expansion-name")
+            response_header = response_header.get_text()
+            response_header=response_header.replace("\r","")
+            response_header=response_header.replace("\n","")
+            response_header=response_header.strip()
 
+        expected_response_username = "Neil Doverty"
+        actual = response_header
+        self.assertEqual(expected_response_username,actual)
+    
     def test_update_url(self):
-        self.assertTrue("https://www.careopinion.org.au/83029#83181") 
-
+        update = Test.bs.find_all("div", class_="author_response comment public")
+        for i in update:
+            update_header = i.find("a",href = "#")
+            update_header = update_header.get_text()
+        
+        expected_update_username = "sigmamp55"
+        actual = update_header
+        self.assertEqual(expected_update_username,actual)
+    
 if __name__ == "__main__":
     unittest.main()
