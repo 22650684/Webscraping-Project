@@ -1,3 +1,8 @@
+import unittest
+import os
+
+#try with unit test
+
 def CompareFiles(str_file1,str_file2):
     '''
     This function compares two long string texts and returns their 
@@ -44,6 +49,13 @@ def Masker(pattern_lines, file2mask):
 
 def main():
     #using one manually checked folder to compare format with all other folders
+    #word or two words separated by comma for tags (feel, improved etc)
+    #use fopen to open files
+    #story shouldn't be empty
+    #title shouln't be empty
+    #time shouldn't be empty
+    #username shouldn't be empty
+
     file_about_path = ""
     file_activity_path = ""
     file_date_path = ""
@@ -61,8 +73,13 @@ def main():
     file_update_path = ""
     file_update_time = ""
 
+    origin = "/Users/jakha/Documents/Professional Computing/webscrape_files"
     for num in range(50000, 90000):
-
+        id = str(num)
+        #access each folder
+        ###acesss all files in folder
+        ###access files in response folder
+        ###access files in updates folder
 
 if __name__ == "__main__":
     main()
