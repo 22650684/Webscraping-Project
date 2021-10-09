@@ -1,155 +1,295 @@
 import os
 import re
+from bs4 import BeautifulSoup
 
-def IfEmptyFile(file):
-    if os.path.getsize(file) == 0:
+def IfEmptyFile(path):
+    if os.path.getsize(path) == 0:
         return True
     else:
         return False
 
-def CheckAbout(file, counter, id):
-    if IfEmptyFile(file) == True:
-        counter += 1
+def CheckAbout(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_About" + ":File empty when shouldn't be")
     else:
-        print("find if contains digits")
-    #if file contains digit true, not string and not empty
-    pass
-
-def CheckDate(file, empty_counter, format_counter):
-    if IfEmptyFile(file) == True:
-        empty_counter += 1
-    else:
-        format = re.search("[0-2021][-][0-12][-][0-32][,][0-23][:][0-59]", file)
-        if file == format:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\D", lines)
+        if format:
+            #print(True)
             return True
         else:
-            format_counter += 1
+            print(str(id) + "_About" + ":File format incorrect")
+            return False
 
-def CheckTags(file):
-        #check completely
-        pass
-    #if file contains strings and commas after every one, two or three words
-
-def CheckProgress(file, empty_counter, format_counter):
-    if IfEmptyFile(file) == True:
-        empty_counter += 1
+def CheckActivity(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Activity" + ":File empty when shouldn't be")
     else:
-        format = re.search("^This story has", file)
-        if file == format:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\d", lines)
+        if format:
+            #print(True)
+            return True
+        else:
+            print(str(id) + "_Activity" + ":File format incorrect")
+            return False
+
+# def CheckDate(path, empty_counter, format_counter):
+#     if IfEmptyFile(path) == True:
+#         empty_counter += 1
+#         #print(empty_counter)
+#     else:
+#         file = open(path, 'r')
+#         lines = file.read()
+#         print(lines)
+#         format = re.search("^[0-2021][-]([0-1][0-2])[-]([0-3][0-1])[,]([0-2][0-3])[:]([0-5][0-9])[:]([0-5][0-9])$", lines)
+#         if format:
+#             print("True")
+#             return True
+#         else:
+#             format_counter += 1
+#             print(format_counter)
+
+def CheckFeelTags(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + ":Feel tags file empty")
+        return None
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\D", lines)
+        if format:
+            return True
+        else:
+            print(str(id) + "_Feel_Tag" + ":File format incorrect")
+            return False
+
+def CheckGoodTags(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + ":Good tags file empty")
+        return None
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\D", lines)
+        if format:
+            return True
+        else:
+            print(str(id) + "_Good_Tag" + ":File format incorrect")
+            return False
+
+def CheckImprovedTags(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + ":Improved Tags file empty")
+        return None
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\D", lines)
+        if format:
+            return True
+        else:
+            print(str(id) + "_Improved_Tag" + ":File format incorrect")
+            return False
+
+def CheckSimilar(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + ":Similar file empty")
+        return None
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\D", lines)
+        if format:
+            return True
+        else:
+            print(str(id) + "_Similar" + ":File format incorrect")
+            return False
+    
+def CheckProgress(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Progress" + ":File empty when shouldn't be")
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("^(This story has)(.*)$", lines)
+        if format:
+            #print(True)
             return True
         else: 
-            format_counter += 1
+            print(str(id) + "_Progress" + ":File format incorrect")
+            return False
+           
 
-def CheckStory(file, empty_counter, format_counter):
-    if IfEmptyFile(file) == True:
-        empty_counter += 1
+def CheckStory(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Story" + ":File empty when shouldn't be")
     else:
-        pass
-    #contains string
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\w", lines)
+        if format:
+            #print(True)
+            return True
+        else:
+            print(str(id) + "_Story" + ":File format incorrect")
+            return False
 
-def CheckTitle(file, empty_counter):
-    if IfEmptyFile(file) == True:
-        empty_counter += 1
+def CheckTitle(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Title" + ":File empty when shouldn't be")
     else:
-        pass
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\w", lines)
+        if format:
+            #print(True)
+            return True
+        else:
+            print(str(id) + "_Title" + ":File format incorrect")
+
     #if file not empty
     #contains string and not numbers
 
-def CheckUsername(file, empty_counter, format_counter):
-    if IfEmptyFile(file) == True:
-        empty_counter += 1
+def CheckUsername(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Username" + ":File empty when shouldn't be")
     else:
-        format = re.search("^Posted By", file)
-        if file == format:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("^(Posted By)(.*)$", lines)
+        if format:
+            #print(True)
             return True
         else:
-            format_counter += 1
-    #if file not empty
-    #contains right format 'Posted By'
+            print(str(id) + "_Username" + ":File format incorrect")
 
-def CheckResponse(file):
-    if IfEmptyFile(file) == True:
-        pass
+def CheckResponse(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Response" + ":File empty when shouldn't be")
     else:
-        #if file contains string
-        pass
-    #if file not empty if meant to have response
-    #if file contains string
-
-def CheckResponseHeader(file):
-    if IfEmptyFile(file) == True:
-        pass
-    else:
-        pass
-    #if file not empty if meant to have response
-    #if file contains string
-    #if format right -> contains commas
-    pass
-
-def CheckResponseTime(file, format_counter):
-    if IfEmptyFile(file) == True:
-        pass
-    else:
-        format = re.search("Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59]", file)
-        if file == format:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\w", lines)
+        if format:
+            #print(True)
             return True
         else:
-            format_counter += 1
-    #if file not empty if meant to have response
-    #if file has right format 'Submitted on XXXXXX at XX:XX'
+            print(str(id) + "_Response" + ":File format incorrect")
 
-def CheckUpdate(file):
-    if IfEmptyFile(file) == True:
-        pass
+def CheckResponseHeader(path, id):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_ResponseHeader" + ":File empty when shouldn't be")
     else:
-        pass
-    #if file not empty if meant to have update
-    #if file has strings
-    pass
-
-def CheckUpdateTime(file, format_counter):
-    if IfEmptyFile(file) == True:
-        pass
-    else:
-        format = re.search("Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59] and published on Care Opinion at [0-23][:][0-59]")
-    #if file not empty if meant to have update
-    #if file right format 'Submitted on XXXXX at XX:XX and published ....'
-        if file == format:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\w", lines)
+        if format:
+            #print(True)
             return True
         else:
-            format_counter += 1
+            print(str(id) + "_ResponseHeader" + ":File format incorrect")
+
+# def CheckResponseTime(path, format_counter):
+#     if len(os.listdir(path + '/Responses')) == 0:
+#         pass
+#     else:
+#         file = open(path, 'r')
+#         lines = file.read()
+#         format = re.search("^Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59]$", lines)
+#         if format:
+#             print(True)
+#             return True
+#         else:
+#             format_counter += 1
+#             print(format_counter)
+#     #if file not empty if meant to have response
+#     #if file has right format 'Submitted on XXXXXX at XX:XX'
+
+def CheckUpdate(path, format_counter):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Update" + ":File empty when shouldn't be")
+    else:
+        file = open(path, 'r')
+        lines = file.read()
+        format = re.search("\w", lines)
+        if format:
+            #print(True)
+            return True
+        else:
+            print(str(id) + "_Update" + ":File format incorrect")
+
+# def CheckUpdateTime(path, format_counter):
+    # if len(os.listdir(path + '/Updates')) == 0:
+    #     pass
+    # else:
+    #     file = open(path, 'r')
+    #     lines = file.read()
+    #     format = re.search("^Submitted on [0-31][/][0-12][/][0-2021] at [0-23][:][0-59] and published on Care Opinion at [0-23][:][0-59]$", lines)
+    #     if format:
+    #         print(True)
+    #         return True
+    #     else:
+    #         format_counter += 1
+    #         print(format_counter)
+    # #if file not empty if meant to have update
+    # #if file right format 'Submitted on XXXXX at XX:XX and published ....'
+        
 
 def main():
-    counter = 0
-    f_id_about = open("/Users/jakha/Documents/Professional Computing/webscrape_files/70000/70000_Date", "r")
-
-    CheckAbout(f_id_about, counter)
-
-    path_all_files = "/Users/jakha/Documents/Professional Computing/webscrape_files"
-
-    # for num in range(70000, 70002):
-    #     id = str(num)
-    #     story_folder = os.path.join(path_all_files, id)
-        
-        
-    #     # f_id_about = open(story_folder + id + "_About")
-    #     f_id_activity = open(story_folder + id + "_Activity")
-    #     f_id_date = open(story_folder + id + "_Date")
-    #     f_id_feel = open(story_folder + id + "_Feel")
-    #     f_id_good = open(story_folder + id + "_Good")
-    #     f_id_improved = open(story_folder + id + "_Improved")
-    #     f_id_progress = open(story_folder + id + "_Progress")
-    #     f_id_similar = open(story_folder + id + "_Similar")
-    #     f_id_story = open(story_folder + id + "_Story")
-    #     f_id_title = open(story_folder + id + "_Title")
-    #     f_id_username = open(story_folder + id + "_Username")
-
-    #     CheckDate()
     
-        #access each folder
-        ###acesss all files in folder
-        ###access files in response folder
-        ###access files in updates folder
+    # id = 70000
+    # f_id_about = "/Users/jakha/Documents/Professional Computing/webscrape_files/70000/70000_About"
+
+    # CheckAbout(f_id_about, id)
+
+    origin = "/Users/jakha/Documents/Professional Computing/webscrape_files/"
+
+    for num in range(70000, 72000):
+
+        id = str(num)
+        story_folder = os.path.join(origin, id)
+
+        if os.path.exists(story_folder):
+            
+            f_id_about = story_folder + "/" + id + "_About"
+            f_id_activity = story_folder + "/" + id + "_Activity"
+            # f_id_date = story_folder + "_Date"
+            f_id_feel = story_folder + "/" + id + "_Feel_Tag"
+            f_id_good = story_folder + "/" + id + "_Good_Tag"
+            f_id_improved = story_folder + "/" + id + "_Improved_Tag"
+            f_id_progress = story_folder + "/" + id + "_Progress"
+            f_id_similar = story_folder + "/" + id + "_Similar"
+            f_id_story = story_folder + "/" + id + "_Story"
+            f_id_title = story_folder + "/" + id + "_Title"
+            f_id_username = story_folder + "/" + id + "_Username"
+
+            CheckAbout(f_id_about, id)
+            CheckActivity(f_id_activity, id)
+            CheckProgress(f_id_progress, id)
+            CheckStory(f_id_story, id)
+            CheckTitle(f_id_title, id)
+            CheckUsername(f_id_username, id)
+            CheckFeelTags(f_id_feel, id)
+            CheckGoodTags(f_id_good, id)
+            CheckImprovedTags(f_id_improved, id)
+            CheckSimilar(f_id_similar, id)
+
+            f_id_responses_folder = story_folder + "/Responses"
+
+            if len(os.listdir(story_folder + '/Responses')) == 0:
+                print(str(id) + ":Doesn't have responses")
+            else:
+                print(str(id) + ": need to find response ID")
+
+            f_id_updates_folder = story_folder + "/Updates"
+
+            if len(os.listdir(story_folder + '/Updates')) == 0:
+                print(str(id) + ":Doesn't have updates")
+            else:
+                print(str(id) + ":need to find update ID")
 
 if __name__ == "__main__":
     main()
