@@ -237,16 +237,33 @@ class Test(unittest.TestCase):
         expected_response_username = "Neil Doverty"
         actual = response_header
         self.assertEqual(expected_response_username,actual)
-    
-    def test_update_url(self):
-        update = Test.bs.find_all("div", class_="author_response comment public")
-        for i in update:
-            update_header = i.find("a",href = "#")
-            update_header = update_header.get_text()
         
-        expected_update_username = "sigmamp55"
-        actual = update_header
-        self.assertEqual(expected_update_username,actual)
+    def test_update_url(self):
+        url = "https://www.careopinion.org.au/83181"
+        Test.bs_update = BeautifulSoup(urlopen(url),'html.parser')
+        update_title=''
+        update = Test.bs_update.find("title")
+        for i in update:
+            update_title+=i
+            update_title=update_title.replace(" | Care Opinion", "")
+
+        #updateid = update.find("h2",class_="text-base lg:text-x1")
+
+        #for i in update:
+            #update_header = i.find("a",href = "#")
+            #update_header = update_header.get_text()
+        
+        #expected_update_username = "Hospital ED above and beyond"
+        titleTxt = ""
+        titleTag = Test.bs.find("title")
+        for i in titleTag:
+            titleTxt += i
+        titleT = titleTxt.replace(" | Care Opinion", "")
+        titleT = titleT
+        
+        title_from_mainstory = titleT
+        title_from_update = update_title
+        self.assertEqual(title_from_mainstory,title_from_update)
     
 if __name__ == "__main__":
     unittest.main()
