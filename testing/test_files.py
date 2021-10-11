@@ -1,6 +1,7 @@
 import os
 import re
 from bs4 import BeautifulSoup
+from urllib.request import urlopen
 
 def IfEmptyFile(path):
     if os.path.getsize(path) == 0:
@@ -215,11 +216,41 @@ def CheckUpdate(path, format_counter):
         file = open(path, 'r')
         lines = file.read()
         format = re.search("\w", lines)
+
         if format:
             #print(True)
             return True
         else:
             print(str(id) + "_Update" + ":File format incorrect")
+
+def checkresponses_url(path,id,story_folder):
+    if IfEmptyFile(path) == True:
+        print(str(id) + "_Update" + ":File empty when shouldn't be")
+    else:
+        for files in path[0:1]: #take the first file in the response folder
+            if files.is_dir():
+                file = str(files)
+                url_num = file.split('_')[1] #getting the url for response
+    
+        url = "https://www.careopinion.org.au/"+str(url_num) #going through each responses url
+        response_url = BeautifulSoup(urlopen(url),'html.parser')
+        response_title=''
+        response = response_url.find("title")
+        for i in response:
+            response_title+=i
+            response_title=response_title.replace(" | Care Opinion", "")
+
+        f_id_title = story_folder + "/" + id + "_Title"
+        file2 = open(f_id_title,'r') #getting title from story url
+        lines = file2.read()
+    
+        if str(lines) == str(response_title):
+            return True
+
+        else:
+            print("Url invalid")
+
+
 
 # def CheckUpdateTime(path, format_counter):
     # if len(os.listdir(path + '/Updates')) == 0:
@@ -265,6 +296,7 @@ def main():
             f_id_story = story_folder + "/" + id + "_Story"
             f_id_title = story_folder + "/" + id + "_Title"
             f_id_username = story_folder + "/" + id + "_Username"
+            f_id_responses_folder = story_folder + "/Responses"
 
             CheckAbout(f_id_about, id)
             CheckActivity(f_id_activity, id)
@@ -276,8 +308,9 @@ def main():
             CheckGoodTags(f_id_good, id)
             CheckImprovedTags(f_id_improved, id)
             CheckSimilar(f_id_similar, id)
+            checkresponses_url(f_id_responses_folder,id,story_folder)
 
-            f_id_responses_folder = story_folder + "/Responses"
+            
 
             if len(os.listdir(story_folder + '/Responses')) == 0:
                 print(str(id) + ":Doesn't have responses")
@@ -290,6 +323,7 @@ def main():
                 print(str(id) + ":Doesn't have updates")
             else:
                 print(str(id) + ":need to find update ID")
+            
 
 if __name__ == "__main__":
     main()
