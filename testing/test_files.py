@@ -225,7 +225,7 @@ def CheckUpdate(path, format_counter):
 
 def checkresponses_url(path,id,story_folder):
     if IfEmptyFile(path) == True:
-        print(str(id) + "_Update" + ":File empty when shouldn't be")
+        pass
     else:
         for files in path[0:1]: #take the first file in the response folder
             if files.is_dir():
