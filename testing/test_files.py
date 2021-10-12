@@ -405,6 +405,7 @@ def main():
     file_empty.close()
     tags_empty.close()
     activity_empty.close()
+    incorrect_format.close()
 
 if __name__ == "__main__":
     main()
