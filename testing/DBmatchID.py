@@ -26,7 +26,8 @@ class Test(unittest.TestCase):
 
         cur.close()
         if wrongID:
-            print("List of storyIDs that exists in Response but not in Review: ", wrongID)
+            msg = "List of storyIDs that exists in Response but not in Review: " + str(wrongID)
+            self.assertTrue(False, msg)
     
     def test_updateID(self):
         cur = conn.cursor()
@@ -45,7 +46,8 @@ class Test(unittest.TestCase):
 
         cur.close()
         if wrongupdateID:
-            print("List of storyIDs that exists in userUpdates but not in Review: ", wrongupdateID)
+            msg = "List of storyIDs that exists in userUpdates but not in Review: " + str(wrongupdateID)
+            self.assertTrue(False, msg)
     
 if __name__ == '__main__':
     unittest.main(verbosity=2)
