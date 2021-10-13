@@ -2,6 +2,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import requests
 
 def IfEmptyFile(path):
     if os.path.getsize(path) == 0:
@@ -302,6 +303,29 @@ def CheckUpdateDate(path, id, file_empty, incorrect_format):
 
 #         else:
 #             print("Url invalid")
+def check_response_update_url(id,title_path, resp_or_up, save_errors,story_id):
+    #finding url title
+    url = "https://www.careopinion.org.au/"+str(id) #going through each responses url
+    page = requests.get(url)
+        # Simulating starting from 81,000 so need to add "810"
+        
+    fullHTML = BeautifulSoup(page.content,"html.parser")
+    titleTag = fullHTML.find("title")
+    titleTxt = ""
+    for i in titleTag:
+        titleTxt += i
+    title_url = titleTxt.replace("| Care Opinion", "")
+
+    #Finding .txt title
+    title_file=open(title_path,'r')
+    title_txt = title_file.read()
+    if title_url != title_txt:
+        # print(title_txt)
+        # print(title_url)
+        print(str(story_id))
+        save_errors.write(str(story_id)+"_"+str(id) + resp_or_up+ "\n")
+
+
 
 def main():
     
@@ -311,7 +335,7 @@ def main():
     # CheckAbout(f_id_about, id)
     count = 0
 
-    origin = "/Users/maxdi/source/webscraper-inital/realScrape"
+    origin = "/Users/maxdi/source/webscraper-inital/oldRevs"
     url_count = "/Users/maxdi/source/webscraper-inital"
 
     file_empty = open(url_count + "_Empty_Files_URLs", "a+")
@@ -331,18 +355,22 @@ def main():
 
     no_updates = open(url_count + "_No_Updates_URLs", "a+")
     no_updates.write("URLs with no updates: \n")
+
+    urls_dont_match = open(url_count + "_urls_dont_weird", "a+")
+    urls_dont_match.write("URLs that don't match: \n")
+
     
-    for num in range(68000, 78000):
+    
+    for num in range(60840, 60890):
 
         id = str(num)
-        # story_folder = origin+ "/" +str(num)
-        story_folder = os.path.join(origin, id)
+        story_folder = origin+ "/" +str(num)
+        # story_folder = os.path.join(origin, id)
         # os.chdir(origin)
         # count += 1
         if os.path.exists(story_folder):
         # try:
             # os.chdir(story_folder)
-
             f_id_about = story_folder + "/" + id + "_About"
             f_id_activity = story_folder + "/" + id + "_Activity"
             f_id_date = story_folder + "/" + id + "_Date"
@@ -366,7 +394,6 @@ def main():
             CheckGoodTags(f_id_good, id, tags_empty, incorrect_format)
             CheckImprovedTags(f_id_improved, id, tags_empty, incorrect_format)
             CheckSimilar(f_id_similar, id, tags_empty, incorrect_format)
-            #checkresponses_url(f_id_responses_folder,id,story_folder)
 
             #store urls with no responses and updates in a file put on git
             #store urls with no tags file
@@ -379,6 +406,8 @@ def main():
             else:
                 for file in os.listdir(f_id_responses_folder):
                     if file.endswith("_Response"):
+                        url_num = file.split('_')[1]
+                        check_response_update_url(url_num,f_id_title, "_Response", urls_dont_match,id)
                         f_id_response = os.path.join(f_id_responses_folder, file)
                         #print(f_id_response)
                         CheckResponse(f_id_response, id, file_empty, incorrect_format)
@@ -399,7 +428,9 @@ def main():
                 #print(str(id) + ":need to find update ID")
                 for file in os.listdir(f_id_updates_folder):
                     if file.endswith("_Update"):
+                        up_num = file.split('_')[1]
                         f_id_update = os.path.join(f_id_updates_folder, file)
+                        check_response_update_url(up_num,f_id_title, "_Update", urls_dont_match,id)
                         CheckUpdate(f_id_update, id, file_empty, incorrect_format)
                     elif file.endswith("_Update_date"):
                         f_id_update_date = os.path.join(f_id_updates_folder, file)
@@ -417,6 +448,7 @@ def main():
     tags_empty.close()
     activity_empty.close()
     incorrect_format.close()
+    urls_dont_match.close()
 
 if __name__ == "__main__":
     main()
