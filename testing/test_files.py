@@ -14,14 +14,14 @@ def CheckAbout(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_About\n")
         #print(str(id) + "_About" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\D", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_About")
+            incorrect_format.write(str(id) + "_About\n")
             #print(str(id) + "_About" + ":File format incorrect")
             return False
 
@@ -30,14 +30,14 @@ def CheckActivity(path, id, activity_empty, incorrect_format):
         activity_empty.write(str(id) + "\n")
         #print(str(id) + "_Activity" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\d", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Activity")
+            incorrect_format.write(str(id) + "_Activity\n")
             #print(str(id) + "_Activity" + ":File format incorrect")
             return False
 
@@ -48,7 +48,7 @@ def CheckDate(path, id, file_empty, incorrect_format):
         #print(empty_counter)
         return None
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         #print(lines)
         format = re.search("^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[,]([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", lines)
@@ -56,7 +56,7 @@ def CheckDate(path, id, file_empty, incorrect_format):
             #print("True")
             return True
         else:
-            incorrect_format.write(str(id) + "_Date")
+            incorrect_format.write(str(id) + "_Date\n")
             #print(str(id) + "_Date" + ":File format incorrect")
             return False
 
@@ -66,13 +66,13 @@ def CheckFeelTags(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Feel tags file empty")
         return None
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\D", lines)
         if format:
             return True
         else:
-            incorrect_format.write(str(id) + "_Feel_Tags")
+            incorrect_format.write(str(id) + "_Feel_Tags\n")
             #print(str(id) + "_Feel_Tag" + ":File format incorrect")
             return False
 
@@ -88,7 +88,7 @@ def CheckGoodTags(path, id, tags_empty, incorrect_format):
         if format:
             return True
         else:
-            incorrect_format.write(str(id) + "_Good_Tags")
+            incorrect_format.write(str(id) + "_Good_Tags\n")
             #print(str(id) + "_Good_Tag" + ":File format incorrect")
             return False
 
@@ -104,7 +104,7 @@ def CheckImprovedTags(path, id, tags_empty, incorrect_format):
         if format:
             return True
         else:
-            incorrect_format.write(str(id) + "_Improved_Tags")
+            incorrect_format.write(str(id) + "_Improved_Tags\n")
             #print(str(id) + "_Improved_Tag" + ":File format incorrect")
             return False
 
@@ -114,13 +114,13 @@ def CheckSimilar(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Similar file empty")
         return None
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\D", lines)
         if format:
             return True
         else:
-            incorrect_format.write(str(id) + "_Similar_Tags")
+            incorrect_format.write(str(id) + "_Similar_Tags\n")
             #print(str(id) + "_Similar" + ":File format incorrect")
             return False
     
@@ -129,31 +129,31 @@ def CheckProgress(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Progress\n")
         #print(str(id) + "_Progress" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("^(This story)(.*)$", lines)
         if format:
             #print(True)
             return True
         else: 
-            incorrect_format.write(str(id) + "_Progress")
+            incorrect_format.write(str(id) + "_Progress\n")
             #print(str(id) + "_Progress" + ":File format incorrect")
             return False
            
 
 def CheckStory(path, id, file_empty, incorrect_format):
     if IfEmptyFile(path) == True:
-        file_empty.write(str(id) + "_Story\n")
+        file_empty.write((str(id) + "_Story\n"))
         #print(str(id) + "_Story" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\w", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Story")
+            incorrect_format.write(str(id) + "_Story\n")
             #print(str(id) + "_Story" + ":File format incorrect")
             return False
 
@@ -162,14 +162,14 @@ def CheckTitle(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Title\n")
         #print(str(id) + "_Title" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\w", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Title")
+            incorrect_format.write(str(id) + "_Title\n")
             #print(str(id) + "_Title" + ":File format incorrect")
             return False
 
@@ -181,14 +181,14 @@ def CheckUsername(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Username\n")
         #print(str(id) + "_Username" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("^(Posted By)(.*)$", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Username")
+            incorrect_format.write(str(id) + "_Username\n")
             #print(str(id) + "_Username" + ":File format incorrect")
             return False
 
@@ -197,14 +197,14 @@ def CheckResponse(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response\n")
         #print(str(id) + "_Response" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\w", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Response")
+            incorrect_format.write(str(id) + "_Response\n")
             #print(str(id) + "_Response" + ":File format incorrect")
             return False
 
@@ -213,14 +213,14 @@ def CheckResponseHeader(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response_Header\n")
         #print(str(id) + "_ResponseHeader" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\w", lines)
         if format:
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Response_Header")
+            incorrect_format.write(str(id) + "_Response_Header\n")
             #print(str(id) + "_ResponseHeader" + ":File format incorrect")
             return False
 
@@ -229,7 +229,7 @@ def CheckResponseDate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response_Date\n")
         #print(str(id) + "_ResponseTime" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         #print(lines)
         format = re.search("^Submitted on (0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d at ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", lines)
@@ -246,7 +246,7 @@ def CheckUpdate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Update\n")
         #print(str(id) + "_Update" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         format = re.search("\w", lines)
         #print(lines)
@@ -255,7 +255,7 @@ def CheckUpdate(path, id, file_empty, incorrect_format):
             #print(True)
             return True
         else:
-            incorrect_format.write(str(id) + "_Update")
+            incorrect_format.write(str(id) + "_Update\n")
             #print(str(id) + "_Update" + ":File format incorrect")
             return False
 
@@ -264,7 +264,7 @@ def CheckUpdateDate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Update_Date\n")
         #print(str(id) + "_UpdateDate" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'r')
+        file = open(path, 'a+')
         lines = file.read()
         #print(lines)
         format = re.search("^Submitted on ((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d) at ([0-1]?[0-9]|2[0-3]):[0-5][0-9] and published on Care Opinion (.*)$", lines)
@@ -272,7 +272,7 @@ def CheckUpdateDate(path, id, file_empty, incorrect_format):
             #print(id + ":Update Date True")
             return True
         else:
-            incorrect_format.write(str(id) + "_Update_Date")
+            incorrect_format.write(str(id) + "_Update_Date\n")
             #print(str(id) + "_UpdateDate" + ":File format incorrect")
             return False
 
@@ -309,35 +309,40 @@ def main():
     # f_id_about = "/Users/jakha/Documents/Professional Computing/webscrape_files/70000/70000_About"
 
     # CheckAbout(f_id_about, id)
+    count = 0
 
-    origin = "/Users/jakha/Documents/Professional Computing/realScrape/realScrape"
-    url_count = "/Users/jakha/Documents/Professional Computing/Webscraping-Project/Important URLs/"
+    origin = "/Users/maxdi/source/webscraper-inital/realScrape"
+    url_count = "/Users/maxdi/source/webscraper-inital"
 
-    file_empty = open(url_count + "Empty_Files_URLs", "a+")
+    file_empty = open(url_count + "_Empty_Files_URLs", "a+")
     file_empty.write("File empty when shouldn't be: \n")
 
-    activity_empty = open(url_count + "Activity_Empty_URLs", "a+")
+    activity_empty = open(url_count + "_Activity_Empty_URLs", "a+")
     activity_empty.write("Empty Activity URLs: \n")
 
-    tags_empty = open(url_count + "Empty_Tags_URLs", "a+")
+    tags_empty = open(url_count + "_Empty_Tags_URLs", "a+")
     tags_empty.write("Empty Tags URLs: \n")
 
-    incorrect_format = open(url_count + "Incorrect_Format_URLs", "a+")
+    incorrect_format = open(url_count + "_Incorrect_Format_URLs", "a+")
     incorrect_format.write("URLs with incorrect format: \n")
 
-    no_responses = open(url_count + "No_Responses_URLs", "a+")
+    no_responses = open(url_count + "_No_Responses_URLs", "a+")
     no_responses.write("URLs with no responses: \n")
 
-    no_updates = open(url_count + "No_Updates_URLs", "a+")
+    no_updates = open(url_count + "_No_Updates_URLs", "a+")
     no_updates.write("URLs with no updates: \n")
     
     for num in range(68000, 78000):
 
         id = str(num)
+        # story_folder = origin+ "/" +str(num)
         story_folder = os.path.join(origin, id)
-
+        # os.chdir(origin)
+        # count += 1
         if os.path.exists(story_folder):
-            
+        # try:
+            # os.chdir(story_folder)
+
             f_id_about = story_folder + "/" + id + "_About"
             f_id_activity = story_folder + "/" + id + "_Activity"
             f_id_date = story_folder + "/" + id + "_Date"
@@ -399,7 +404,13 @@ def main():
                     elif file.endswith("_Update_date"):
                         f_id_update_date = os.path.join(f_id_updates_folder, file)
                         CheckUpdateDate(f_id_update_date, id, file_empty, incorrect_format)
+            count += 1
+        # except:
+        #     pass
+
             
+            
+    print(count)
     no_responses.close()
     no_updates.close()
     file_empty.close()
