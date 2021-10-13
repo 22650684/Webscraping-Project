@@ -72,7 +72,7 @@ class Test(unittest.TestCase):
             testActivity.append(eachActivity[0])
         cur.close()
         if testActivity:
-            msg = "(Review) StoryID of Activity which is empty (supposingly equal to 0): " + str(testActivity)
+            msg = "(Review) StoryID of Activity which is empty: " + str(testActivity)
             self.assertTrue(False, msg)
 
     def good_tag(self):
