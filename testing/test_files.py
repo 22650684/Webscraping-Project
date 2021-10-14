@@ -15,7 +15,7 @@ def CheckAbout(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_About\n")
         #print(str(id) + "_About" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\D", lines)
         if format:
@@ -31,7 +31,7 @@ def CheckActivity(path, id, activity_empty, incorrect_format):
         activity_empty.write(str(id) + "\n")
         #print(str(id) + "_Activity" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\d", lines)
         if format:
@@ -49,7 +49,7 @@ def CheckDate(path, id, file_empty, incorrect_format):
         #print(empty_counter)
         return None
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         #print(lines)
         format = re.search("^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[,]([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", lines)
@@ -67,7 +67,7 @@ def CheckFeelTags(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Feel tags file empty")
         return None
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\D", lines)
         if format:
@@ -83,7 +83,7 @@ def CheckGoodTags(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Good tags file empty")
         return None
     else:
-        file = open(path, 'r')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\D", lines)
         if format:
@@ -99,7 +99,7 @@ def CheckImprovedTags(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Improved Tags file empty")
         return None
     else:
-        file = open(path, 'r')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\D", lines)
         if format:
@@ -115,7 +115,7 @@ def CheckSimilar(path, id, tags_empty, incorrect_format):
         #print(str(id) + ":Similar file empty")
         return None
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\D", lines)
         if format:
@@ -130,7 +130,7 @@ def CheckProgress(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Progress\n")
         #print(str(id) + "_Progress" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("^(This story)(.*)$", lines)
         if format:
@@ -147,7 +147,7 @@ def CheckStory(path, id, file_empty, incorrect_format):
         file_empty.write((str(id) + "_Story\n"))
         #print(str(id) + "_Story" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\w", lines)
         if format:
@@ -163,7 +163,7 @@ def CheckTitle(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Title\n")
         #print(str(id) + "_Title" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\w", lines)
         if format:
@@ -182,7 +182,7 @@ def CheckUsername(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Username\n")
         #print(str(id) + "_Username" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("^(Posted By)(.*)$", lines)
         if format:
@@ -198,7 +198,7 @@ def CheckResponse(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response\n")
         #print(str(id) + "_Response" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\w", lines)
         if format:
@@ -214,7 +214,7 @@ def CheckResponseHeader(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response_Header\n")
         #print(str(id) + "_ResponseHeader" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\w", lines)
         if format:
@@ -230,7 +230,7 @@ def CheckResponseDate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Response_Date\n")
         #print(str(id) + "_ResponseTime" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         #print(lines)
         format = re.search("^Submitted on (0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d at ([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", lines)
@@ -247,7 +247,7 @@ def CheckUpdate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Update\n")
         #print(str(id) + "_Update" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path, 'r',encoding="utf-8")
         lines = file.read()
         format = re.search("\w", lines)
         #print(lines)
@@ -265,7 +265,7 @@ def CheckUpdateDate(path, id, file_empty, incorrect_format):
         file_empty.write(str(id) + "_Update_Date\n")
         #print(str(id) + "_UpdateDate" + ":File empty when shouldn't be")
     else:
-        file = open(path, 'a+')
+        file = open(path,"r",encoding="utf-8")
         lines = file.read()
         #print(lines)
         format = re.search("^Submitted on ((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d) at ([0-1]?[0-9]|2[0-3]):[0-5][0-9] and published on Care Opinion (.*)$", lines)
@@ -335,7 +335,7 @@ def main():
     # CheckAbout(f_id_about, id)
     count = 0
 
-    origin = "/Users/maxdi/source/webscraper-inital/oldRevs"
+    origin = "/Users/maxdi/source/webscraper-inital/realScrape"
     url_count = "/Users/maxdi/source/webscraper-inital"
 
     file_empty = open(url_count + "_Empty_Files_URLs", "a+")
@@ -356,7 +356,7 @@ def main():
     no_updates = open(url_count + "_No_Updates_URLs", "a+")
     no_updates.write("URLs with no updates: \n")
 
-    urls_dont_match = open(url_count + "_urls_dont_weird", "a+")
+    urls_dont_match = open(url_count + "_urls_dont_match", "a+")
     urls_dont_match.write("URLs that don't match: \n")
 
     
