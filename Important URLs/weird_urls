@@ -10,6 +10,8 @@
 #incorrect activity number
 58139
 
+
+#All of these have been checked 14/10/21 by Max using selenium: All have 0 reads by staff
 There's 774 activites that are empty in the database. (chkDBcontent.py)
 (Review) StoryID of Activity which is empty: [58139, 58140, 58144, 58146, 58149, 58150, 58154, 58156, 58158, 58161, 58162, 58168, 58171, 58175, 
 58176, 58178, 58186, 58187, 58188, 58194, 58196, 58208, 58213, 58215, 58217, 58218, 58222, 58223, 58231, 58234, 58238, 58243, 58255, 58257, 58280, 58287, 58295, 58298, 
