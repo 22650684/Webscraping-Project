@@ -45,7 +45,7 @@ class Test(unittest.TestCase):
     def test_username(self):
         cur = conn.cursor()
         testUsername = []
-        test_name = cur.execute("SELECT StoryID FROM Review WHERE Username NOT LIKE '%Posted By%' AND Username IS NULL;")
+        test_name = cur.execute("SELECT StoryID FROM Review WHERE Username NOT LIKE '%Posted By%' OR Username IS NULL;")
         for uname in test_name:
             testUsername.append(uname[0])
         cur.close()
