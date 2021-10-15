@@ -17,7 +17,7 @@ def CheckAbout(path, id, file_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\D", lines)
+        format = re.search("\w", lines) #has numbers so check if numbers and string -> less than 100 characters
         if format:
             #print(True)
             return True
@@ -61,6 +61,7 @@ def CheckDate(path, id, file_empty, incorrect_format):
             #print(str(id) + "_Date" + ":File format incorrect")
             return False
 
+#check if integer if not integer check for [13 health] for all tags except feel tags
 def CheckFeelTags(path, id, tags_empty, incorrect_format):
     if IfEmptyFile(path) == True:
         tags_empty.write(str(id) + ":Feel tags file empty\n")
@@ -69,7 +70,7 @@ def CheckFeelTags(path, id, tags_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\D", lines)
+        format = re.search("\w", lines)
         if format:
             return True
         else:
@@ -77,6 +78,7 @@ def CheckFeelTags(path, id, tags_empty, incorrect_format):
             #print(str(id) + "_Feel_Tag" + ":File format incorrect")
             return False
 
+#numbers in good tags [covid-19]
 def CheckGoodTags(path, id, tags_empty, incorrect_format):
     if IfEmptyFile(path) == True:
         tags_empty.write(str(id) + ":Good tags file empty\n")
@@ -85,7 +87,7 @@ def CheckGoodTags(path, id, tags_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\D", lines)
+        format = re.search("\w", lines)
         if format:
             return True
         else:
@@ -93,6 +95,7 @@ def CheckGoodTags(path, id, tags_empty, incorrect_format):
             #print(str(id) + "_Good_Tag" + ":File format incorrect")
             return False
 
+#has numbers in improved check for all
 def CheckImprovedTags(path, id, tags_empty, incorrect_format):
     if IfEmptyFile(path) == True:
         tags_empty.write(str(id) + ":Improved tags file empty\n")
@@ -101,7 +104,7 @@ def CheckImprovedTags(path, id, tags_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\D", lines)
+        format = re.search("\w", lines)
         if format:
             return True
         else:
@@ -149,7 +152,7 @@ def CheckStory(path, id, file_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\w", lines)
+        format = re.search("\w[ -\/:-@\[-\`{-~]", lines)
         if format:
             #print(True)
             return True
@@ -200,7 +203,7 @@ def CheckResponse(path, id, file_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\w", lines)
+        format = re.search("\w[ -\/:-@\[-\`{-~]", lines)
         if format:
             #print(True)
             return True
@@ -216,7 +219,7 @@ def CheckResponseHeader(path, id, file_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\w", lines)
+        format = re.search("\w\W", lines)
         if format:
             #print(True)
             return True
@@ -249,7 +252,7 @@ def CheckUpdate(path, id, file_empty, incorrect_format):
     else:
         file = open(path, 'r',encoding="utf-8")
         lines = file.read()
-        format = re.search("\w", lines)
+        format = re.search("\w[ -\/:-@\[-\`{-~]", lines)
         #print(lines)
         if format:
             #print(id + "Update True")
@@ -303,6 +306,7 @@ def CheckUpdateDate(path, id, file_empty, incorrect_format):
 
 #         else:
 #             print("Url invalid")
+
 def check_response_update_url(id,title_path, resp_or_up, save_errors,story_id):
     #finding url title
     url = "https://www.careopinion.org.au/"+str(id) #going through each responses url
@@ -335,8 +339,8 @@ def main():
     # CheckAbout(f_id_about, id)
     count = 0
 
-    origin = "/Users/maxdi/source/webscraper-inital/realScrape"
-    url_count = "/Users/maxdi/source/webscraper-inital"
+    origin = "/Users/jakha/Documents/Professional Computing/realScrape/realScrape"
+    url_count = "/Users/jakha/Documents/Professional Computing/Webscraping-Project/Important URLs/"
 
     file_empty = open(url_count + "_Empty_Files_URLs", "a+")
     file_empty.write("File empty when shouldn't be: \n")
