@@ -39,7 +39,7 @@ def scan_folder(parentfile, diff, allfiles):
 
 def loopFile(parentfile, allfiles):
     for file_name in os.listdir(parentfile):
-        if file_name.endswith("Story") or file_name.endswith("Response") or file_name.endswith("Update"):
+        if "_" in file_name:
             allfiles.append(file_name)
             
         else:
