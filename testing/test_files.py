@@ -332,11 +332,7 @@ def check_response_update_url(id,title_path, resp_or_up, save_errors,story_id):
 
 
 def main():
-    
-    # id = 70000
-    # f_id_about = "/Users/jakha/Documents/Professional Computing/webscrape_files/70000/70000_About"
 
-    # CheckAbout(f_id_about, id)
     count = 0
 
     origin = "/Users/jakha/Documents/Professional Computing/realScrape/realScrape"
@@ -368,13 +364,10 @@ def main():
     for num in range(60840, 60890):
 
         id = str(num)
-        story_folder = origin+ "/" +str(num)
-        # story_folder = os.path.join(origin, id)
-        # os.chdir(origin)
-        # count += 1
+        story_folder = origin + "/" + str(num)
+        
         if os.path.exists(story_folder):
-        # try:
-            # os.chdir(story_folder)
+        
             f_id_about = story_folder + "/" + id + "_About"
             f_id_activity = story_folder + "/" + id + "_Activity"
             f_id_date = story_folder + "/" + id + "_Date"
@@ -398,10 +391,6 @@ def main():
             CheckGoodTags(f_id_good, id, tags_empty, incorrect_format)
             CheckImprovedTags(f_id_improved, id, tags_empty, incorrect_format)
             CheckSimilar(f_id_similar, id, tags_empty, incorrect_format)
-
-            #store urls with no responses and updates in a file put on git
-            #store urls with no tags file
-            #urls with proper errors in same file
 
             f_id_responses_folder = story_folder + "/Responses"
             if len(os.listdir(f_id_responses_folder)) == 0:
@@ -440,11 +429,7 @@ def main():
                         f_id_update_date = os.path.join(f_id_updates_folder, file)
                         CheckUpdateDate(f_id_update_date, id, file_empty, incorrect_format)
             count += 1
-        # except:
-        #     pass
-
-            
-            
+        
     print(count)
     no_responses.close()
     no_updates.close()
