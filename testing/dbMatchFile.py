@@ -12,11 +12,10 @@ def scan_folder(parentfile, diff):
             
             if os.path.isdir(current_path):
                 scan_folder(current_path, diff)
-    if diff:
-        return diff
+    return diff
 
 def eachfile(file_name,parentfile, diff):
-    conn = sqlite3.connect('deletethis.db')
+    conn = sqlite3.connect('healthReviewsChangeDB.db')
     cur = conn.cursor()
     dbcol = ''
     dbTable = ''
@@ -86,17 +85,16 @@ def eachfile(file_name,parentfile, diff):
             content = reader.read()
             if eachcontent[0] != content:
                 diff.append(file_name)
-    
     cur.close()
-    if diff:
-        return diff
+    return diff
 
 def main():
-    parentfile = "/mnt/c/Users/Juju/DB/project/webscrape/file"
+    parentfile = "/mnt/c/Users/Juju/DB/project/webscrape/realScrape"
     diff = []
     scan_folder(parentfile, diff) 
     if diff:
         print("The file name that the content is different from the Database:", diff)
+        print("Number of files: ", str(len(diff)))
     else:
         print("Test OK")
 
