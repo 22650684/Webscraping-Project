@@ -6,7 +6,6 @@ def scan_folder(parentfile, diff, allfiles):
     
     for file_name in os.listdir(parentfile):
         if file_name.endswith("Story") or file_name.endswith("Response") or file_name.endswith("Update"):
-            print(file_name)
             samefile = 0
             with open(parentfile+"/"+file_name, 'r') as reader:
                 content = reader.read()
