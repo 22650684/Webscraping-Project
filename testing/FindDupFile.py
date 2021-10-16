@@ -22,7 +22,7 @@ def scan_folder(parentfile, diff, allfiles):
                         content2 = reader2.read()
                         dupmsg = file_name + " and " + file_name2
                         dupmsg2 = file_name2 + " and " + file_name                        
-                        if content == content2 and content != "" and dupmsg not in diff and dupmsg2 not in diff and storyid != storyid2:
+                        if content == content2 and content != "" and dupmsg not in diff and dupmsg2 not in diff and file_name != file_name2:
                             strMsg = file_name + " and " + file_name2
                             diff.append(strMsg)
             
