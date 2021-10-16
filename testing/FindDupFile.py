@@ -6,7 +6,6 @@ def scan_folder(parentfile, diff, allfiles):
     
     for file_name in os.listdir(parentfile):
         if file_name.endswith("Story") or file_name.endswith("Response") or file_name.endswith("Update"):
-            samefile = 0
             with open(parentfile+"/"+file_name, 'r') as reader:
                 content = reader.read()
                 storyid =file_name[:5]
@@ -24,10 +23,8 @@ def scan_folder(parentfile, diff, allfiles):
                         dupmsg = file_name + " and " + file_name2
                         dupmsg2 = file_name2 + " and " + file_name                        
                         if content == content2 and content != "" and dupmsg not in diff and dupmsg2 not in diff and storyid != storyid2:
-                            samefile = samefile + 1
-                            if (samefile != 0):
-                                strMsg = file_name + " and " + file_name2
-                                diff.append(strMsg)
+                            strMsg = file_name + " and " + file_name2
+                            diff.append(strMsg)
             
         else:
             current_path = "".join((parentfile, "/", file_name))
