@@ -344,7 +344,7 @@ def main():
             resHeader = open(str(num) + "_" + ide.attrs["data-po-response-id"] +  "_" + "Response_Header", "ab")
             responseCp = responseHeaderStr
             responseCp = responseHeaderStr.replace("  ","")
-            sep= "More"
+            sep= "More responses from"
             responseCp = responseCp.split(sep, 1)[0]
             responseCp = responseCp.replace("\r",",")
             responseCp = responseCp.replace("\n",",")
