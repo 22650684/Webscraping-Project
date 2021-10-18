@@ -47,7 +47,7 @@ def create_review(conn, review):
     conn.commit()
 
 def create_response(conn, allResponse):
-    sql = ''' INSERT INTO Response(ResponseID,Response,ResponseInfo,ResponseTime,storyID) VALUES(?,?,?,?,?)'''
+    sql = ''' INSERT INTO Response(ResponseID,Response,ResponseHeader,ResponseTime,storyID) VALUES(?,?,?,?,?)'''
     cur = conn.cursor()
     cur.execute(sql, allResponse)
     conn.commit()
