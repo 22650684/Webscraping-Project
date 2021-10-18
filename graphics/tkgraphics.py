@@ -168,13 +168,23 @@ def create_update(conn, allUpdate):
     conn.commit()
 
 def webscrape_url():
+    global origin
     url_id = 0
     url = web_url.get()
     high = high_range_url.get()
     lower = low_range_url.get()
-    origin = "/Users/maxdi/source/webscraper-inital/allRevs"
+    os.chdir(origin)
+    os.chdir("..")
+    try:
+        os.chdir("Reviews")
+        origin_path = os.getcwd()
+    except:
+        err = "Unable to scrape. Make sure there is a directory called Reviews alongside this GUI"
+        search_results.insert(END,err)
+        return
+    # origin = "/Users/maxdi/source/webscraper-inital/GUI/testRevs"
+    rangeCheck=False
     rangeCheck = (high != "" and lower != "")
-    print(rangeCheck)
     lower_while = 0
     higher_while = 1
     if len(url) != 36 and not rangeCheck:
@@ -193,20 +203,24 @@ def webscrape_url():
     else:
         lower_while = 0
         higher_while = 1 
-    #Makes sure you can do both
+
     if ((not high.isdecimal()) or (not lower.isdecimal())) and url=="":
         error = "Enter only numbers in the range"
         search_results.insert(END,error)
         return
-    os.chdir(origin)
-    print(lower_while)
-    print(higher_while)
+    # print(lower_while)
+    # print(higher_while)
     # num = int(url[-5:])
+    return_val = FALSE
 
     for num in range (lower_while,higher_while):
-        os.chdir(origin)
+        print("lower while {}".format(lower_while))
+        print("upper while {}".format(higher_while))
+        os.chdir(origin_path)
         if url_id != 0:
             num = url_id
+            url = web_url.get()
+            return_val = TRUE
             id = 0
         if(int(lower_while) < 10000 or int(higher_while) < 10000):
             url = web_url.get()
@@ -273,16 +287,20 @@ def webscrape_url():
             search_results.insert(END,print_error)
             continue
         
-        review = fullHTML.find(id="opinion_body")
-        f = open(id +"Story", "ab")
-        f.write(review.text.encode())
+        revHTML = fullHTML.find(id="opinion_body")
+        f = open(id+"Story", "ab")
+        review = revHTML.text.replace("\n","")
+        review = review.replace("\r","")
+        f.write(review.encode())
         f.close
 
         # Getting time of review
         timediv = fullHTML.find("time")
         timeSub = timediv.attrs["datetime"]
-        time = open(id +"Date", "ab")
-        time.write(str(timeSub).encode())
+        time = open(id+"Date", "ab")
+        timeSub =str(timeSub).replace("T",",")
+        timeSub =str(timeSub).replace("Z","")
+        time.write(timeSub.encode())
         time.close()
 
         # get all good,bad,feeling tags
@@ -369,8 +387,11 @@ def webscrape_url():
         # Getting username
         userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
         userDiv = userNameAll.find("div")
-        username = open(id +"Username","ab")
-        username.write(userDiv.text.encode())
+        username = open(id+"Username","ab")
+        userN = userDiv.text.replace("\r","")
+        userN = userN.replace("\n","")
+        userN = userN.replace("  ","")
+        username.write(userN.encode())
         username.close()
         
 
@@ -383,7 +404,6 @@ def webscrape_url():
         readNum = ""
         currentreadNum = open(id +"Activity","ab")
         for i in currentReadNum:
-            print(i)
             try:
                 currentreadNum.write(i.encode())
                 readNum += i
@@ -405,20 +425,25 @@ def webscrape_url():
         titleTxt = ""
         # Get the title 
         titleTag = fullHTML.find("title")
-        title = open(id +"Title","ab")
+        title = open(id+ "Title","ab")
         for i in titleTag:
             titleTxt += i
-            title.write(i.encode())
+        titleT = titleTxt.replace("| Care Opinion", "")
+        title.write(titleT.encode())
         title.close()
+
         prog = ""
         #Get the progress
-        whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
-        progressOfRev = whereReviewUpToTag.find("h2")
-        progress = open(id +"Progress","ab")
+        prog = ""
+        whereReviewUpToTag = fullHTML.find("p", class_="margin-top-1 margin-bottom-0")
+        progressOfRev = whereReviewUpToTag.text
+        progress = open(id+"Progress","ab")
         for i in progressOfRev:
-            # print(i)
-            progress.write(i.encode())
             prog += i
+        prog = prog.replace("\r" ,"")
+        prog = prog.replace("\n", "")
+        prog = prog.strip()
+        progress.write(prog.encode())
         progress.close()
 
         #Make the response folder and add response names
@@ -437,17 +462,19 @@ def webscrape_url():
         insideLoop = False
 
         for ide in respID:
-            responseStr = ""
+            responseString = ""
+            responseHeaderStr = ""
             resp = fullHTML.find("div", id=ide.attrs["data-po-response-id"])
             responseHTML = resp.find_all("blockquote", class_="froala-view")
-            dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
-            
+            dateSumbmitted = resp.find("span", class_="response-submission-footer-content")   
             responseHeader = resp.find("div", class_= "inner-expansion-profile")
             try:
-                responseHeaderStr = responseHeader.text
+                # for i in responseHeader:
+                responseHeaderStr += responseHeader.text
+                    # responseHeaderStr += ", "
             except:
-                pass
-            resHeader = open(ide.attrs["data-po-response-id"]+ "_"+id +"Response_Header", "ab")
+                nc=1
+            resHeader = open(str(num) + "_" + ide.attrs["data-po-response-id"] +  "_" + "Response_Header", "ab")
             responseCp = responseHeaderStr
             responseCp = responseHeaderStr.replace("  ","")
             responseCp = responseCp.replace("\r",",")
@@ -463,23 +490,25 @@ def webscrape_url():
             resHeader.write(responseCp.encode())
             resHeader.close()
             for i in responseHTML:
-                resp = open(ide.attrs["data-po-response-id"]+"_"+id +"Response","ab")
-                respTime = open(ide.attrs["data-po-response-id"]+ "_"+ id +"Response_Time","ab")
+                resp = open(str(num) + "_"+ide.attrs["data-po-response-id"]+ "_"+ "Response","ab")
+                respTime = open(str(num) + "_"+ide.attrs["data-po-response-id"]+ "_" + "Response_Time","ab")
                 respTime.write(dateSumbmitted.text.encode())
-                resp.write(i.text.encode())
-                resp.close()
-                responseStr += i.text
-            res = (int(ide.attrs["data-po-response-id"]),responseStr,responseHeaderStr,dateSumbmitted.text,str(num))
-        # try:
+                responseString += i.text
+            responseStr = responseString.replace("\r","")
+            responseStr = responseStr.replace("\n","")
+            resp.write(responseStr.encode())
+            resp.close()
+            res = (int(ide.attrs["data-po-response-id"]),responseStr,responseCp,dateSumbmitted.text,str(num))
             create_response(conn, res)
-            # except:
-            #     err = "This review has already been scraped"
-            #     insideLoop = True
-            #     continue
-        if insideLoop:
-            search_results.insert(END,err)
-            continue
-        #Make updates folder
+        # try:
+        # create_response(conn, res)
+        # except UnboundLocalError:
+        #         err = "This review has already been scraped"
+
+        # if insideLoop:
+        #     search_results.insert(END,err)
+        #     continue
+        # #Make updates folder
         os.chdir("..")
         os.mkdir("Updates")
         os.chdir("Updates")
@@ -487,21 +516,25 @@ def webscrape_url():
             updateDiv = fullHTML.find_all("div", class_="author_response comment public")
             for i in updateDiv:
                 updID = i.attrs["id"]
-                blockText = i.find("blockquote")
-                updateDiv = open(updID+ "_"+id+ "Update", "ab")
-                updateDiv.write(blockText.text.encode())
+                blockTextSearch = i.find("blockquote")
+                updateDiv = open(str(num) + "_"+updID+ "_" + "Update", "ab")
+                blockText = blockTextSearch.text.replace("\r","")
+                blockText = blockText.replace("\n","")
+                updateDiv.write(blockText.encode())
                 updateDiv.close()
 
                 updateTime = i.find("a", class_="share-link")
                 fullTime = updateTime.attrs["title"]
-                upTime = open(updID+ "_"+id+ "Update_date","ab")
+                upTime = open(str(num) + "_" +updID+ "_" + "Update_date","ab")
                 upTime.write(str(fullTime).encode())
                 upTime.close()
+                update = (updID,blockText,fullTime,str(num))
+                create_update(conn,update)
         except:
             pass
         #update = (updateID,updateText,updateUsername,str(num))
         #create_update(conn,update)
-        rev = (str(num),review.text,userDiv.text,titleTxt,locationStr,timeSub,readNum,prog,goodStr,similarStr,improvedStr,feelStr)
+        rev = (str(num),review,userN,titleT,locationCp,timeSub,readNum,prog,goodCp,similarCp,improveCp,feelCp)
         try:
             create_review(conn,rev)
         except:
@@ -510,245 +543,8 @@ def webscrape_url():
             continue
         successString = "Review {} has been added!".format(str(num))
         search_results.insert(END,successString)
-    url = web_url.get()
-    origin = "/Users/maxdi/source/webscraper-inital/appRevs"
-    if len(url) != 36:
-        error="Invalid URL. Make sure it is of form https://www.careopinion.org.au/#####" 
-        search_results.insert(END,error)
-        return
-    os.chdir(origin)
-    try:
-        page = requests.get(url)
-        fullHTML = BeautifulSoup(page.content,"html.parser")
-    except:
-        error = "Invalid URL"
-        search_results.insert(END,error)
-        return
-    id = "_" + url[-5:]
-    num = int(url[-5:])
-    goodStr = ""
-    similarStr = ""
-    improvedStr = ""
-    feelStr = ""
-    locationStr = ""
-
-    print_error="" 
-    errors = fullHTML.find_all("div", class_="messages")
-    erStr = str(errors)
-    if "We couldn't find the story" in erStr:
-        print_error = "Invalid URL"
-
-    if "story was withdrawn" in erStr:
-        print_error = "Invalid URL"
-
-    if print_error != "":
-        search_results.insert(END,print_error)
-        return
-
-    realID = fullHTML.find("article")
-    if str(realID.attrs["data-po-opinionid"]) != str(num):
-        print_error = "This URL is not for a review. Try again with review url"
-    
-    respID = fullHTML.find_all("ul" , class_="response-supplemental clearfix")
-    #If the id is actually a response id then do not re-download
-    for ip in respID:
-        if str(ip.attrs["data-po-response-id"]) == str(num):
-            print_error = "This URL is for a response. Try again with review url"
-            break
-
-    upID = fullHTML.find_all("div" , class_="author_response comment public")
-    for uID in upID:
-        if str(uID.attrs["data-po-opinionid"]) == str(num):
-            print_error = "This URL is for an update. Try again with review url"
-            break
-    
-    if print_error != "":
-        search_results.insert(END,print_error)
-        return
-    try:
-        os.mkdir(str(num))
-        os.chdir(str(num))
-    except FileExistsError:
-        #TODO make a popup and ask if he would like to re-download
-        print_error="Review has already been downloaded"
-        search_results.insert(END,print_error)
-        return
-    
-    review = fullHTML.find(id="opinion_body")
-    f = open("Story" + id, "ab")
-    f.write(review.text.encode())
-    f.close
-
-    # Getting time of review
-    timediv = fullHTML.find("time")
-    timeSub = timediv.attrs["datetime"]
-    time = open("Date"+id, "ab")
-    time.write(str(timeSub).encode())
-    time.close()
-
-    # get all good,bad,feeling tags
-    parentDivs = fullHTML.find_all("div", class_="mb-4")
-    for i in parentDivs:
-        checker = str(i.h3)
-        tags = i.find_all("a", class_="inline-block font-c-1 tooltip")    
-
-        if "What was good?"  in checker:
-            for tag in tags:
-                # good.append(tag.text)
-                goodStr += tag.text
-
-        
-        if "What could be improved?" in checker:
-            for tag in tags:
-                # improved.append(tag.text)
-                improvedStr += tag.text
-
-        if "How did you feel?" in checker:
-            for tag in tags:
-                # feel.append(tag.text)
-                feelStr += tag.text
-
-    g = open("Good_Tag"+id, "ab")
-    b = open("Improved_Tag"+id, "ab")
-    feel = open("Feel_Tag"+id, "ab")
-
-    g.write(goodStr.encode())
-    b.write(improvedStr.encode())
-    feel.write(feelStr.encode())
-    g.close()
-    b.close()
-    feel.close()
-
-    # Getting similar tags
-    moreAbout = fullHTML.find_all("div", class_="other-tags")
-    for i in moreAbout:
-        tags = i.find_all("a", class_="inline-block font-c-1 tooltip")
-        for tag in tags:
-            # similar.append(tag.text)
-            similarStr += tag.text
-    similar = open("Similar"+id,"ab")
-    similar.write(similarStr.encode())
-    similar.close()
-    
-    # Getting username
-    userNameAll =  fullHTML.find("div", class_="sticky-title inline-block")
-    userDiv = userNameAll.find("div")
-    username = open("Username"+id,"ab")
-    username.write(userDiv.text.encode())
-    username.close()
-    
-
-    #Get number of reads
-    currentList =  fullHTML.find("li", id="subscribers_read_count")
-    try:
-        currentReadNum = currentList.strong
-    except AttributeError:
-        nc=1
-    readNum = ""
-    currentreadNum = open("Activity"+id,"ab")
-    for i in currentReadNum:
-        print(i)
-        try:
-            currentreadNum.write(i.encode())
-            readNum += i
-        except:
-            n34=0
-    currentreadNum.close()
-
-    # Getting location
-    location = fullHTML.find_all("span", itemtype="http://schema.org/Organization")
-    for loc in location:
-        locationStr += loc.text
-    locations = open("About"+id, "ab")
-    locations.write(locationStr.encode())
-    locations.close()
-    
-    titleTxt = ""
-    # Get the title 
-    titleTag = fullHTML.find("title")
-    title = open("Title"+id,"ab")
-    for i in titleTag:
-        titleTxt += i
-        title.write(i.encode())
-    title.close()
-    prog = ""
-    #Get the progress
-    whereReviewUpToTag = fullHTML.find("aside", class_="author-subscriber")
-    progressOfRev = whereReviewUpToTag.find("h2")
-    progress = open("Progress"+id,"ab")
-    for i in progressOfRev:
-        print(i)
-        progress.write(i.encode())
-        prog += i
-    progress.close()
-
-    #Make the response folder and add response names
-    os.mkdir("Responses")
-    os.chdir("Responses")
-    #Response Header
-
-    #Response Date
-    # responseDate = fullHTML.findAll("span", class_="response-submission-footer-content")
-    # resDate = open("responseDate"+id, "ab")
-    # responseDateStr = ""
-    # for date in responseDate:
-    #     responseDateStr += date.text
-    # resDate.write(responseDateStr.encode())
-    # resDate.close()
-    for id in respID:
-        responseStr = ""
-        resp = fullHTML.find("div", id=id.attrs["data-po-response-id"])
-        responseHTML = resp.find_all("blockquote", class_="froala-view")
-        dateSumbmitted = resp.find("span", class_="response-submission-footer-content")
-        
-        responseHeader = resp.find("div", class_= "inner-expansion-profile")
-        try:
-            responseHeaderStr = responseHeader.text
-        except:
-            pass
-        resHeader = open("Response_Header_"+id.attrs["data-po-response-id"], "ab")
-        resHeader.write(responseHeaderStr.encode())
-        resHeader.close()
-        for i in responseHTML:
-            resp = open("Response_"+id.attrs["data-po-response-id"],"ab")
-            respTime = open("Response_Time"+id.attrs["data-po-response-id"],"ab")
-            respTime.write(dateSumbmitted.text.encode())
-            resp.write(i.text.encode())
-            resp.close()
-            responseStr += i.text
-        res = (int(id.attrs["data-po-response-id"]),responseStr,responseHeaderStr,dateSumbmitted.text,str(num))
-        create_response(conn, res)
-                
-    #Make updates folder
-    os.chdir("..")
-    os.mkdir("Updates")
-    os.chdir("Updates")
-    try:
-        updateDiv = fullHTML.find_all("div", class_="author_response comment public")
-        for i in updateDiv:
-            updID = i.attrs["id"]
-            blockText = i.find("blockquote")
-            updateDiv = open("Update_"+updID, "ab")
-            updateDiv.write(blockText.text.encode())
-            updateDiv.close()
-
-            updateTime = i.find("a", class_="share-link")
-            fullTime = updateTime.attrs["title"]
-            upTime = open("Update_date_"+updID,"ab")
-            upTime.write(str(fullTime).encode())
-            upTime.close()
-    except:
-        nc=1
-    #update = (updateID,updateText,updateUsername,str(num))
-    #create_update(conn,update)
-    rev = (str(num),review.text,userDiv.text,titleTxt,locationStr,timeSub,readNum,prog,goodStr,similarStr,improvedStr,feelStr)
-    try:
-        create_review(conn,rev)
-    except:
-        error_string = "This review has already been scraped"
-        search_results.insert(END,error_string)
-    successString = "Review {} has been added!".format(str(num))
-    search_results.insert(END,successString)
+        if return_val:
+            return
 
 
 def main():
@@ -759,8 +555,10 @@ def main():
     global web_url
     global high_range_url
     global low_range_url
+    global origin
     win = tk.Tk()
 
+    origin = os.getcwd()
     DataTypes = [
         "Select Tag",
         "id",
@@ -770,7 +568,6 @@ def main():
         "improved Tag",
         "response Tag",
         "feel Tag",
-        "location Tag"
         "about",
         "title"
     ]
@@ -782,8 +579,8 @@ def main():
     #style.configure("TLabel", background= setColour)
     style.configure("TButton", background= setColour)
     style.configure("OptionMenu", background= setColour)
+    os.chdir("imgs")
     backgrounds = ["cropmulticols.png","bluepurple.png","cropbluepurple.png","morepurple.png","blueback.png"]
-
     
     #Part title
     part_label = tk.Label
@@ -793,6 +590,7 @@ def main():
     win.backGroundImage = PhotoImage(file=backgrounds[4])
     win.backGroundImageLabel=Label(win, image=win.backGroundImage)
     win.backGroundImageLabel.place(x=0,y=0)
+    os.chdir(origin)
     # title_label = tk.Label(win,text = "Welcome! Use this to search for reviews in the databse:", font=('bold',10),pady=20,padx=100)
     # title_label.grid()
 
@@ -808,7 +606,6 @@ def main():
     input_tag.place(x=550,y=100)
 
     #specific search e.g nurse, food, doctors
-   
     spec_text = tk.StringVar()
     spec_label = ttk.Label(win,text = "Enter Specific Tag:", font=('courier',12))
     spec_label.place(x=350,y=140)
